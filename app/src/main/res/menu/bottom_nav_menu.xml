@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/navigation_my_lists"
+        android:icon="@drawable/ic_list"
+        android:title="" />
+
+    <item
+        android:id="@+id/navigation_shared"
+        android:icon="@drawable/ic_share"
+        android:title="" />
+
+    <item
+        android:id="@+id/navigation_bin"
+        android:icon="@drawable/ic_bin"
+        android:title="" />
+
+    <item
+        android:id="@+id/navigation_profile"
+        android:icon="@drawable/ic_account"
+        android:title="" />
+
+</menu>

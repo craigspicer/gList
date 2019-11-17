@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/container"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/PrimaryLight">
+
+    <Button
+        android:id="@+id/button_decrease"
+        android:layout_width="50dp"
+        android:layout_height="40dp"
+        android:layout_marginEnd="8dp"
+        android:background="@drawable/rounded_edges"
+        android:backgroundTint="@color/TertiaryDark"
+        android:text="-"
+        android:textColor="@color/PrimaryLight"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toBottomOf="@+id/grocery_amount"
+        app:layout_constraintEnd_toStartOf="@+id/grocery_amount"
+        app:layout_constraintRight_toLeftOf="@+id/grocery_amount"
+        app:layout_constraintTop_toTopOf="@+id/grocery_amount" />
+
+    <Button
+        android:id="@+id/button_increase"
+        android:layout_width="50dp"
+        android:layout_height="40dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:background="@drawable/rounded_edges"
+        android:backgroundTint="@color/TertiaryDark"
+        android:text="+"
+        android:textColor="@color/PrimaryLight"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toBottomOf="@+id/grocery_amount"
+        app:layout_constraintEnd_toStartOf="@+id/button_add"
+        app:layout_constraintLeft_toRightOf="@+id/grocery_amount"
+        app:layout_constraintStart_toEndOf="@+id/grocery_amount"
+        app:layout_constraintTop_toTopOf="@+id/grocery_amount" />
+
+    <Button
+        android:id="@+id/button_add"
+        android:layout_width="70dp"
+        android:layout_height="40dp"
+        android:layout_marginStart="8dp"
+        android:background="@drawable/rounded_edges"
+        android:backgroundTint="@color/Accent"
+        android:text="add"
+        android:textAppearance="@android:style/TextAppearance.Holo.Large"
+        android:textColor="@color/PrimaryLight"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="@+id/button_increase"
+        app:layout_constraintLeft_toRightOf="@+id/button_increase"
+        app:layout_constraintStart_toEndOf="@+id/button_increase"
+        app:layout_constraintTop_toTopOf="@+id/button_increase" />
+
+    <AutoCompleteTextView
+        android:id="@+id/searchField"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="16dp"
+        android:background="@drawable/rounded_edges"
+        android:backgroundTint="@color/SecondaryLight"
+        android:completionThreshold="1"
+        android:drawableStart="@drawable/ic_search"
+        android:drawablePadding="8dp"
+        android:ems="10"
+        android:hint="Item name"
+        android:imeOptions="actionSearch"
+        android:inputType="text"
+        android:padding="8dp"
+        android:text=""
+        android:textColor="@color/TertiaryDark"
+        android:textColorHint="@color/TertiaryDark"
+        android:textSize="16sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar" />
+
+    <TextView
+        android:id="@+id/grocery_amount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="0"
+        android:textColor="@color/PrimaryDark"
+        android:textSize="30sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/searchField" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycler_view"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="16dp"
+        android:fadeScrollbars="false"
+        android:scrollbarThumbVertical="@color/Accent"
+        android:scrollbars="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/grocery_amount" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
+        app:layout_constraintBottom_toBottomOf="@+id/recycler_view"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:srcCompat="@drawable/ic_help" />
+
+    <include
+        android:id="@+id/toolbar"
+        layout="@layout/toolbar_list"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

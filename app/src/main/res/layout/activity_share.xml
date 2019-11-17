@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/container"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/PrimaryLight">
+
+    <include
+        android:id="@+id/toolbar"
+        layout="@layout/toolbar_share"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <EditText
+        android:id="@+id/sharedUserEmail"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:autofillHints="email address"
+        android:ems="10"
+        android:hint="Email address to share with"
+        android:importantForAutofill="yes"
+        android:inputType="textEmailAddress"
+        android:textColor="@color/PrimaryDark"
+        android:textColorHint="@color/PrimaryDark"
+        android:textSize="16sp"
+        app:backgroundTint="@color/PrimaryDark"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar"
+        tools:targetApi="o" />
+
+    <TextView
+        android:id="@+id/whatsapp_text"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="56dp"
+        android:layout_marginEnd="16dp"
+        android:text="Share via WhatsApp"
+        android:textColor="@color/PrimaryDark"
+        android:textSize="16sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toEndOf="@+id/whatsapp_icon"
+        app:layout_constraintTop_toBottomOf="@+id/import_text" />
+
+    <ImageView
+        android:id="@+id/whatsapp_icon"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        app:layout_constraintBottom_toBottomOf="@+id/whatsapp_text"
+        app:layout_constraintStart_toStartOf="@+id/import_icon"
+        app:layout_constraintTop_toTopOf="@+id/whatsapp_text"
+        app:srcCompat="@drawable/whatsapp_icon" />
+
+    <ImageView
+        android:id="@+id/import_icon"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_marginStart="4dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintStart_toStartOf="@+id/sharedUserEmail"
+        app:layout_constraintTop_toBottomOf="@+id/sharedUserEmail"
+        app:srcCompat="@drawable/ic_contact_mail" />
+
+    <TextView
+        android:id="@+id/import_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:text="Import from Contacts"
+        android:textColor="@color/PrimaryDark"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toBottomOf="@+id/import_icon"
+        app:layout_constraintStart_toEndOf="@+id/import_icon"
+        app:layout_constraintTop_toTopOf="@+id/import_icon" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

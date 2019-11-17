@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimaryDark">#FFFFFF</color>
+    <color name="PrimaryLight">#FFFFFF</color>
+    <color name="PrimaryDark">#000000</color>
+    <color name="SecondaryLight">#eaeaea</color>
+    <color name="SecondaryDark">#171717</color>
+    <color name="TertiaryDark">#7b7b7b</color>
+    <color name="CardLight">#fafafa</color>
+    <color name="CardDark">#202020</color>
+    <color name="Accent">#0076E1</color>
+</resources>

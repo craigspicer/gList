@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.Toolbar xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/toolbar"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/PrimaryLight">
+
+    <ImageView
+        android:id="@+id/image_view_back"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:layout_margin="8dp"
+        android:src="@drawable/ic_arrow_back" />
+
+    <EditText
+        android:id="@+id/toolbar_list_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="start"
+        android:layout_margin="8dp"
+        android:backgroundTint="@color/Accent"
+        android:hint="Enter list name..."
+        android:inputType="text"
+        android:textColor="@color/PrimaryDark"
+        android:textSize="16sp" />
+
+    <TextView
+        android:id="@+id/toolbar_share"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end"
+        android:layout_margin="16dp"
+        android:text="Share"
+        android:textColor="@color/PrimaryDark"
+        android:textSize="16sp" />
+
+</androidx.appcompat.widget.Toolbar>
