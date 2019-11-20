@@ -21,6 +21,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.ItemTouchHelper;
 
+import android.text.TextUtils;
 import android.view.MotionEvent;
 import android.view.View;
 
@@ -41,6 +42,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
@@ -146,7 +148,7 @@ public class ListActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toasty.info(context, "Swipe left to strike an item\nSwipe right to un-strike an item", Toast.LENGTH_LONG, true).show();
+                Toasty.info(context, "Swipe left to strike an item\nSwipe right to un-strike an item\nTap an item to edit it", Toast.LENGTH_LONG, true).show();
             }
         });
 
@@ -279,16 +281,22 @@ public class ListActivity extends AppCompatActivity {
 
     private void addItem() {
 
+        String name = mEditTextName.getText().toString();
+
+        if (TextUtils.isEmpty(name)) {
+            Toasty.info(context, "Please enter an item name", Toast.LENGTH_LONG, true).show();
+            return;
+        }
+
+        String amount = mTextViewAmount.getText().toString();
+        String cost = editTextCost.getText().toString();
+
         listName = editTextListName.getText().toString().trim();
         if (listName.equals("")) {
             listName = "My List";
         }
 
         long timeStamp = System.currentTimeMillis();
-
-        String name = mEditTextName.getText().toString();
-        String amount = mTextViewAmount.getText().toString();
-        String cost = editTextCost.getText().toString();
 
         String randomItemId = UUID.randomUUID().toString();
 
@@ -341,6 +349,7 @@ public class ListActivity extends AppCompatActivity {
 
         mTextViewAmount.setText("0");
         mEditTextName.getText().clear();
+        editTextCost.getText().clear();
     }
 
     private void setUpRecyclerView() {
@@ -384,6 +393,25 @@ public class ListActivity extends AppCompatActivity {
                 adapter.unStrikeItem(viewHolder.getAdapterPosition());
             }
         }).attachToRecyclerView(recyclerView);
+
+        adapter.setOnItemClickListener(new ItemAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(DocumentSnapshot documentSnapshot, int position) {
+
+                Item item = documentSnapshot.toObject(Item.class);
+
+                Intent i = new Intent(context, ItemActivity.class);
+                i.putExtra("itemId", item.getId());
+                i.putExtra("uniqueId", uniqueId);
+                i.putExtra("collectionId", collectionId);
+                i.putExtra("itemName", item.getName());
+                i.putExtra("itemAmount", item.getAmount());
+                i.putExtra("itemCost", item.getCost());
+                i.putExtra("strike", item.getStrike());
+                startActivity(i);
+                overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
+            }
+        });
     }
 
     @Override

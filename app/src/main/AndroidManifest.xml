@@ -19,7 +19,7 @@
         android:supportsRtl="true"
         android:theme="@style/NoActionBar">
         <activity
-            android:name="com.nullparams.glist.RegisterActivity"
+            android:name=".RegisterActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden">
             <intent-filter>
@@ -37,18 +37,18 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.nullparams.glist.MainActivity"
+            android:name=".MainActivity"
             android:windowSoftInputMode="stateHidden" />
         <activity
-            android:name="com.nullparams.glist.SignInActivity"
+            android:name=".SignInActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden" />
         <activity
-            android:name="com.nullparams.glist.ForgotPasswordActivity"
+            android:name=".ForgotPasswordActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden" />
         <activity
-            android:name="com.nullparams.glist.ListActivity"
+            android:name=".ListActivity"
             android:windowSoftInputMode="stateHidden">
             <intent-filter>
                 <action android:name="com.nullparams.glist.FirebasePushNotifications.TARGETNOTIFICATIONSHARE" />
@@ -57,14 +57,17 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.nullparams.glist.ShareActivity"
+            android:name=".ShareActivity"
             android:windowSoftInputMode="stateHidden" />
         <activity
-            android:name="com.nullparams.glist.SearchActivity"
+            android:name=".SearchActivity"
+            android:windowSoftInputMode="stateHidden" />
+        <activity
+            android:name=".ItemActivity"
             android:windowSoftInputMode="stateHidden" />
 
         <service
-            android:name="com.nullparams.glist.util.MyFirebaseMessagingService"
+            android:name=".util.MyFirebaseMessagingService"
             android:exported="false">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
