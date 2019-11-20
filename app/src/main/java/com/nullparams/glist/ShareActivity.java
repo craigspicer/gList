@@ -41,6 +41,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 import com.nullparams.glist.email.SendMailShare;
 import com.nullparams.glist.models.Item;
 import com.nullparams.glist.models.List;
+import com.nullparams.glist.models.Notification;
 import com.nullparams.glist.models.User;
 
 import java.util.ArrayList;
@@ -320,15 +321,15 @@ public class ShareActivity extends AppCompatActivity {
                                             List list = document.toObject(List.class);
 
                                             DocumentReference sharedUserListPath = mFireBaseFireStore.collection("Users").document(mSharedUserId).collection("Shared_lists").document(uniqueId);
-                                            sharedUserListPath.set(new List(uniqueId, list.getTitle(), list.getTimeStamp(), currentUserEmail, list.getVersion()));
+                                            sharedUserListPath.set(new List(uniqueId, list.getTitle(), list.getTimeStamp(), list.getVersion(), "SharedFragment"));
 
                                             //Write notification for shared user
                                             DocumentReference notificationPath = mFireBaseFireStore.collection("Users").document(mSharedUserId).collection("Notifications").document();
-                                            notificationPath.set(new List(uniqueId, list.getTitle(), list.getTimeStamp(), currentUserEmail, list.getVersion()));
+                                            notificationPath.set(new Notification(uniqueId, list.getTitle(), list.getVersion()));
 
                                             //Establish shared list connection
                                             DocumentReference currentUserSharedListPath = mFireBaseFireStore.collection("Users").document(mCurrentUserId).collection("Shared_lists").document(uniqueId);
-                                            currentUserSharedListPath.set(new List(uniqueId, list.getTitle(), list.getTimeStamp(), sharedUserEmail, list.getVersion()));
+                                            currentUserSharedListPath.set(new List(uniqueId, list.getTitle(), list.getTimeStamp(), list.getVersion(), "SharedFragment"));
                                         }
                                     }
                                 }
@@ -345,11 +346,68 @@ public class ShareActivity extends AppCompatActivity {
                                                     Item item = document.toObject(Item.class);
 
                                                     DocumentReference sharedUserItemsPath = mFireBaseFireStore.collection("Users").document(mSharedUserId).collection("Shared_lists").document(uniqueId).collection(uniqueId).document(item.getId());
-                                                    sharedUserItemsPath.set(new Item(item.getId(), item.getAmount(), item.getName(), item.getStrike()));
+                                                    sharedUserItemsPath.set(new Item(item.getId(), item.getAmount(), item.getName(), item.getStrike(), item.getCost()));
 
                                                     //Establish shared list connection
                                                     DocumentReference currentUserSharedItemsPath = mFireBaseFireStore.collection("Users").document(mCurrentUserId).collection("Shared_lists").document(uniqueId).collection(uniqueId).document(item.getId());
-                                                    currentUserSharedItemsPath.set(new Item(item.getId(), item.getAmount(), item.getName(), item.getStrike()));
+                                                    currentUserSharedItemsPath.set(new Item(item.getId(), item.getAmount(), item.getName(), item.getStrike(), item.getCost()));
+                                                }
+                                            }
+                                        }
+                                    });
+
+                            //Set participants
+                            DocumentReference currentUserParticipantsPath = mFireBaseFireStore.collection("Users").document(mCurrentUserId).collection("Shared_lists").document(uniqueId).collection("Participants").document(currentUserEmail);
+                            currentUserParticipantsPath.set(new User(mCurrentUserId, currentUserEmail));
+
+                            DocumentReference sharedUserParticipantsPath = mFireBaseFireStore.collection("Users").document(mSharedUserId).collection("Shared_lists").document(uniqueId).collection("Participants").document(currentUserEmail);
+                            sharedUserParticipantsPath.set(new User(mCurrentUserId, currentUserEmail));
+
+                            DocumentReference currentUserParticipantsPath2 = mFireBaseFireStore.collection("Users").document(mCurrentUserId).collection("Shared_lists").document(uniqueId).collection("Participants").document(sharedUserEmail);
+                            currentUserParticipantsPath2.set(new User(mSharedUserId, sharedUserEmail));
+
+                            DocumentReference sharedUserParticipantsPath2 = mFireBaseFireStore.collection("Users").document(mSharedUserId).collection("Shared_lists").document(uniqueId).collection("Participants").document(sharedUserEmail);
+                            sharedUserParticipantsPath2.set(new User(mSharedUserId, sharedUserEmail));
+
+                            java.util.List<User> userList = new ArrayList<>();
+
+                            mFireBaseFireStore.collection("Users").document(mCurrentUserId).collection("Shared_lists").document(uniqueId).collection("Participants")
+                                    .get()
+                                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                            if (task.isSuccessful()) {
+
+                                                for (QueryDocumentSnapshot document : task.getResult()) {
+
+                                                    User user = document.toObject(User.class);
+                                                    String userId = user.getId();
+
+                                                    mFireBaseFireStore.collection("Users").document(userId).collection("Shared_lists").document(uniqueId).collection("Participants")
+                                                            .get()
+                                                            .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                                                @Override
+                                                                public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                                                    if (task.isSuccessful()) {
+
+                                                                        for (QueryDocumentSnapshot document : task.getResult()) {
+
+                                                                            User user = document.toObject(User.class);
+
+                                                                            userList.add(user);
+
+                                                                            for (User user1 : userList) {
+
+                                                                                for (User user2 : userList) {
+
+                                                                                    DocumentReference userParticipantsPath = mFireBaseFireStore.collection("Users").document(user1.getId()).collection("Shared_lists").document(uniqueId).collection("Participants").document(user2.getEmailAddress());
+                                                                                    userParticipantsPath.set(new User(user2.getId(), user2.getEmailAddress()));
+                                                                                }
+                                                                            }
+                                                                        }
+                                                                    }
+                                                                }
+                                                            });
                                                 }
                                             }
                                         }
@@ -382,11 +440,12 @@ public class ShareActivity extends AppCompatActivity {
         String modItemString = itemString.replaceAll(",", "\n");
         String modItemString2 = modItemString.replace("[", "");
         String modItemString3 = modItemString2.replace("]", "");
+        String modItemString4 = modItemString3.replace(" ", "");
 
         Intent whatsAppIntent = new Intent(Intent.ACTION_SEND);
         whatsAppIntent.setType("text/plain"); //html
         whatsAppIntent.setPackage("com.whatsapp");
-        whatsAppIntent.putExtra(Intent.EXTRA_TEXT, "https://play.google.com/store/apps/details?id=com.nullparams.glist\n\n" + modItemString3);
+        whatsAppIntent.putExtra(Intent.EXTRA_TEXT, "https://play.google.com/store/apps/details?id=com.nullparams.glist\n\n" + modItemString4);
 
         try {
             startActivity(whatsAppIntent);

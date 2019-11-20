@@ -129,7 +129,7 @@ public class SharedFragment extends Fragment {
                     recyclerView.setVisibility(View.INVISIBLE);
                     emptyView.setImageResource(R.drawable.ic_share);
                     emptyView.setVisibility(View.VISIBLE);
-                    emptyViewText.setText("Lists shared with you will appear here");
+                    emptyViewText.setText("Shared lists will appear here");
                     emptyViewText.setVisibility(View.VISIBLE);
                 }
             }
@@ -185,7 +185,6 @@ public class SharedFragment extends Fragment {
                 i.putExtra("collectionId", "Shared_lists");
                 i.putExtra("uniqueId", documentSnapshot.getId());
                 i.putExtra("listName", list.getTitle());
-                i.putExtra("listAuthor", list.getFromEmailAddress());
                 i.putExtra("callingFragment", "SharedFragment");
                 i.putExtra("fromNotification", false);
                 startActivity(i);
@@ -206,7 +205,7 @@ public class SharedFragment extends Fragment {
                     recyclerView.setVisibility(View.INVISIBLE);
                     emptyView.setImageResource(R.drawable.ic_share);
                     emptyView.setVisibility(View.VISIBLE);
-                    emptyViewText.setText("Lists shared with you will appear here");
+                    emptyViewText.setText("Shared lists will appear here");
                     emptyViewText.setVisibility(View.VISIBLE);
                 } else {
                     recyclerView.setVisibility(View.VISIBLE);

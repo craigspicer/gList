@@ -10,6 +10,7 @@ import android.net.Uri;
 import android.os.Build;
 
 import androidx.core.app.NotificationCompat;
+import androidx.core.content.ContextCompat;
 
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
@@ -34,11 +35,10 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
             String uniqueId = remoteMessage.getData().get("uniqueId");
             String listName = remoteMessage.getData().get("listName");
-            String listAuthor = remoteMessage.getData().get("listAuthor");
             String version = remoteMessage.getData().get("version");
             String clickAction = remoteMessage.getData().get("click_action");
 
-            sendNotification(clickAction, uniqueId, listName, listAuthor, version);
+            sendNotification(clickAction, uniqueId, listName, version);
         }
     }
 
@@ -58,7 +58,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                         .setSmallIcon(R.drawable.ic_notification)
                         .setContentTitle(title)
                         .setContentText(body)
-                        .setColor(getResources().getColor(R.color.Accent))
+                        .setColor(ContextCompat.getColor(context, R.color.Accent))
                         .setAutoCancel(true)
                         .setSound(defaultSoundUri)
                         .setContentIntent(pendingIntent);
@@ -75,14 +75,13 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         notificationManager.notify(0, notificationBuilder.build());
     }
 
-    private void sendNotification(String clickAction, String uniqueId, String listName, String listAuthor, String version) {
+    private void sendNotification(String clickAction, String uniqueId, String listName, String version) {
 
         if (clickAction.equals("com.nullparams.glist.FirebasePushNotifications.TARGETNOTIFICATIONSHARE")) {
 
             Intent intent = new Intent(context, ListActivity.class);
             intent.putExtra("uniqueId", uniqueId);
             intent.putExtra("listName", listName);
-            intent.putExtra("listAuthor", listAuthor);
             intent.putExtra("version", version);
             intent.putExtra("collectionId", "Shared_lists");
             intent.putExtra("callingFragment", "SharedFragment");
@@ -98,7 +97,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             notificationBuilder.setSmallIcon(R.drawable.ic_notification);
             notificationBuilder.setContentTitle("You've received a shared list");
             notificationBuilder.setContentText(listName);
-            notificationBuilder.setColor(getResources().getColor(R.color.Accent));
+            notificationBuilder.setColor(ContextCompat.getColor(context, R.color.Accent));
             notificationBuilder.setAutoCancel(true);
             notificationBuilder.setSound(defaultSoundUri);
             notificationBuilder.setContentIntent(pendingIntent);

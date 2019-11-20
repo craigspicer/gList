@@ -19,7 +19,7 @@
         android:layout_gravity="start"
         android:layout_margin="8dp"
         android:backgroundTint="@color/Accent"
-        android:hint="Enter list name..."
+        android:hint="List name..."
         android:inputType="text"
         android:textColor="@color/PrimaryDark"
         android:textSize="16sp" />

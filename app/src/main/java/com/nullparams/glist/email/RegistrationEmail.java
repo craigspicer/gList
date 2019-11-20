@@ -11,9 +11,9 @@ import sibModel.SendSmtpEmail;
 import sibModel.SendSmtpEmailSender;
 import sibModel.SendSmtpEmailTo;
 
-public class SendMailShare {
+public class RegistrationEmail {
 
-    public static void sendMail(final String sharedUserEmail, final String currentUserEmail, final ArrayList<String> itemArrayList, final String listName) {
+    public static void sendMail(String emailRecipient) {
 
         ApiClient defaultClient = Configuration.getDefaultApiClient();
 
@@ -23,13 +23,12 @@ public class SendMailShare {
         final SmtpApi apiInstance = new SmtpApi();
 
         List<SendSmtpEmailTo> emailArrayList = new ArrayList<>();
-        emailArrayList.add(new SendSmtpEmailTo().email(sharedUserEmail));
+        emailArrayList.add(new SendSmtpEmailTo().email(emailRecipient));
 
         final SendSmtpEmail sendSmtpEmail = new SendSmtpEmail();
         sendSmtpEmail.sender(new SendSmtpEmailSender().email("glist@nullparams.com").name("gList"));
         sendSmtpEmail.to(emailArrayList);
-        sendSmtpEmail.subject("You've received a shared list from " + currentUserEmail);
-
+        sendSmtpEmail.subject("You've successfully registered for gList");
         sendSmtpEmail.htmlContent("<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\"><html xmlns=\"http://www.w3.org/1999/xhtml\" xmlns:v=\"urn:schemas-microsoft-com:vml\" xmlns:o=\"urn:schemas-microsoft-com:office:office\"><head><meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\" /><meta name=\"viewport\" content=\"width=device-width, initial-scale=1\" /><meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\" /><meta name=\"x-apple-disable-message-reformatting\" /><meta name=\"apple-mobile-web-app-capable\" content=\"yes\" /><meta name=\"apple-mobile-web-app-status-bar-style\" content=\"black\" /><meta name=\"format-detection\" content=\"telephone=no\" /><title></title><style type=\"text/css\">\n" +
                 "        /* Resets */\n" +
                 "        .ReadMsgBody { width: 100%; background-color: #ebebeb;}\n" +
@@ -323,7 +322,7 @@ public class SendMailShare {
                 "                                                <table cellpadding=\"0\" border=\"0\" align=\"center\" cellspacing=\"0\" class=\"logo-img-center\"> \n" +
                 "                                                    <tbody><tr>\n" +
                 "                                                        <td valign=\"middle\" align=\"center\" style=\"line-height: 1px;\">\n" +
-                "                                                            <div style=\"border-top:0px None #000;border-right:0px None #000;border-bottom:0px None #000;border-left:0px None #000;display:inline-block; \" cellspacing=\"0\" cellpadding=\"0\" border=\"0\"><div><img width=\"550\" vspace=\"0\" hspace=\"0\" border=\"0\" alt=\"gList\" style=\"float: left;max-width:550px;display:block;\" class=\"rnb-logo-img\" src=\"https://firebasestorage.googleapis.com/v0/b/glist-42600.appspot.com/o/email_header.jpg?alt=media&token=595056a9-0e92-40d2-b36a-21bc030bdd5d\"></div></div></td>\n" +
+                "                                                            <div style=\"border-top:0px None #000;border-right:0px None #000;border-bottom:0px None #000;border-left:0px None #000;display:inline-block; \" cellspacing=\"0\" cellpadding=\"0\" border=\"0\"><div><img width=\"550\" vspace=\"0\" hspace=\"0\" border=\"0\" alt=\"Note-ify\" style=\"float: left;max-width:550px;display:block;\" class=\"rnb-logo-img\" src=\"https://firebasestorage.googleapis.com/v0/b/glist-42600.appspot.com/o/email_header.jpg?alt=media&token=595056a9-0e92-40d2-b36a-21bc030bdd5d\"></div></div></td>\n" +
                 "                                                    </tr>\n" +
                 "                                                </tbody></table>\n" +
                 "                                                </td>\n" +
@@ -379,10 +378,13 @@ public class SendMailShare {
                 "                                                            <table border=\"0\" valign=\"top\" cellspacing=\"0\" cellpadding=\"0\" width=\"100%\" align=\"left\" class=\"rnb-col-1\">\n" +
                 "\n" +
                 "                                                                <tbody><tr>\n" +
-                "                                                                    <td style=\"font-size:14px; font-family:Arial,Helvetica,sans-serif, sans-serif; color:#3c4858; line-height: 21px;\"><div><strong>" + listName + "</strong></div>\n" +
-                "\n" +
-                "<div><br>\n" +
-                "" + itemArrayList + "</div>\n" +
+                "                                                                    <td style=\"font-size:14px; font-family:Arial,Helvetica,sans-serif, sans-serif; color:#3c4858; line-height: 21px;\"><div>\n" +
+                "<div><strong>You've Successfully Registered!</strong><br>\n" +
+                "<br>\n" +
+                "You can now use your email address and password to log in to the App from any of your devices. Open the App to start creating and sharing lists.<br>\n" +
+                "<br>\n" +
+                "Please contact us should you have any questions. We hope you enjoy your experience.</div>\n" +
+                "</div>\n" +
                 "</td>\n" +
                 "                                                                </tr>\n" +
                 "                                                                </tbody></table>\n" +
@@ -637,7 +639,7 @@ public class SendMailShare {
                 "                                                    </tr><tr>\n" +
                 "                                                        <td height=\"10\" style=\"font-size:1px; line-height:0px; mso-hide: all;\">&nbsp;</td>\n" +
                 "                                                    </tr><tr>\n" +
-                "                                                        <td class=\"rnb-mbl-float-none\" style=\"font-size:14px; font-family:Arial,Helvetica,sans-serif;color:#3c4858;float:right;width:350px; line-height: 21px;\"><div>Need some information? Check out our website:&nbsp;<a href=\"https://nullparams.com\" style=\"text-decoration: underline; color: rgb(52, 153, 219);\">https://nullparams.com\u200B</a></div>\n" +
+                "                                                        <td class=\"rnb-mbl-float-none\" style=\"font-size:14px; font-family:Arial,Helvetica,sans-serif;color:#3c4858;float:right;width:350px; line-height: 21px;\"><div>Need some information? Check out our website:&nbsp;<a href=\"https://nullparams.com/\" style=\"text-decoration: underline; color: rgb(52, 153, 219);\">https://nullparams.com\u200B</a></div>\n" +
                 "</td>\n" +
                 "                                                    </tr>\n" +
                 "                                                    </tbody></table>\n" +

@@ -30,6 +30,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.nullparams.glist.email.RegistrationEmail;
 import com.nullparams.glist.models.List;
 import com.nullparams.glist.models.User;
 
@@ -291,10 +292,20 @@ public class RegisterActivity extends AppCompatActivity {
                             userListPath.set(new User(mCurrentUserId, mCurrentUserEmail));
 
                             DocumentReference myGroceryListPath = mFireBaseFireStore.collection("Users").document(mCurrentUserId).collection("My_lists").document(uniqueId);
-                            myGroceryListPath.set(new List(uniqueId, "Grocery List", timeStamp, mCurrentUserEmail, "1"));
+                            myGroceryListPath.set(new List(uniqueId, "Grocery List", timeStamp, "1", "ListsFragment"));
 
                             DocumentReference myToDoListPath = mFireBaseFireStore.collection("Users").document(mCurrentUserId).collection("My_lists").document(uniqueId2);
-                            myToDoListPath.set(new List(uniqueId2, "To-Do List", timeStamp, mCurrentUserEmail, "1"));
+                            myToDoListPath.set(new List(uniqueId2, "To-Do List", timeStamp, "1", "ListsFragment"));
+
+                            //Set participants
+                            DocumentReference groceryListParticipantsPath = mFireBaseFireStore.collection("Users").document(mCurrentUserId).collection("My_lists").document(uniqueId).collection("Participants").document(mCurrentUserEmail);
+                            groceryListParticipantsPath.set(new User(mCurrentUserId, mCurrentUserEmail));
+
+                            //Set participants
+                            DocumentReference toDoListParticipantsPath = mFireBaseFireStore.collection("Users").document(mCurrentUserId).collection("My_lists").document(uniqueId2).collection("Participants").document(mCurrentUserEmail);
+                            toDoListParticipantsPath.set(new User(mCurrentUserId, mCurrentUserEmail));
+
+                            RegistrationEmail.sendMail(mCurrentUserEmail);
 
                             Intent i = new Intent(context, MainActivity.class);
                             i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -344,10 +355,18 @@ public class RegisterActivity extends AppCompatActivity {
                             userListPath.set(new User(mCurrentUserId, mCurrentUserEmail));
 
                             DocumentReference myGroceryListPath = mFireBaseFireStore.collection("Users").document(mCurrentUserId).collection("My_lists").document(uniqueId);
-                            myGroceryListPath.set(new List(uniqueId, "Grocery List", timeStamp, mCurrentUserEmail, "1"));
+                            myGroceryListPath.set(new List(uniqueId, "Grocery List", timeStamp, "1", "ListsFragment"));
 
                             DocumentReference myToDoListPath = mFireBaseFireStore.collection("Users").document(mCurrentUserId).collection("My_lists").document(uniqueId2);
-                            myToDoListPath.set(new List(uniqueId2, "To-Do List", timeStamp, mCurrentUserEmail, "1"));
+                            myToDoListPath.set(new List(uniqueId2, "To-Do List", timeStamp, "1", "ListsFragment"));
+
+                            //Set participants
+                            DocumentReference groceryListParticipantsPath = mFireBaseFireStore.collection("Users").document(mCurrentUserId).collection("My_lists").document(uniqueId).collection("Participants").document(mCurrentUserEmail);
+                            groceryListParticipantsPath.set(new User(mCurrentUserId, mCurrentUserEmail));
+
+                            //Set participants
+                            DocumentReference toDoListParticipantsPath = mFireBaseFireStore.collection("Users").document(mCurrentUserId).collection("My_lists").document(uniqueId2).collection("Participants").document(mCurrentUserEmail);
+                            toDoListParticipantsPath.set(new User(mCurrentUserId, mCurrentUserEmail));
 
                             Intent i = new Intent(context, MainActivity.class);
                             i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);

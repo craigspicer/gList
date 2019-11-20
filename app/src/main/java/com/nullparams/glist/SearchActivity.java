@@ -184,7 +184,7 @@ public class SearchActivity extends AppCompatActivity {
 
         for (ListEntity listEntity : listEntityList) {
 
-            ListEntity listEntityItem = new ListEntity(listEntity.getId(), listEntity.getTitle(), listEntity.getTimeStamp(), listEntity.getFromEmailAddress(), listEntity.getVersion(), listEntity.getCallingFragment());
+            ListEntity listEntityItem = new ListEntity(listEntity.getId(), listEntity.getTitle(), listEntity.getTimeStamp(), listEntity.getVersion(), listEntity.getCallingFragment(), listEntity.getCreatingFragment());
             mLists.add(listEntityItem);
         }
 

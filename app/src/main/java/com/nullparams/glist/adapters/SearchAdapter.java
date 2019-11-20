@@ -28,6 +28,7 @@ import com.nullparams.glist.R;
 import com.nullparams.glist.ShareActivity;
 import com.nullparams.glist.database.ListEntity;
 import com.nullparams.glist.models.Item;
+import com.nullparams.glist.models.User;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -50,7 +51,6 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.SearchView
     class SearchViewHolder extends RecyclerView.ViewHolder {
 
         TextView textViewTitle;
-        TextView textViewList;
         TextView textViewDate;
         TextView textViewFromEmail;
         TextView textViewVersion;
@@ -63,7 +63,6 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.SearchView
             super(itemView);
 
             textViewTitle = itemView.findViewById(R.id.text_view_title);
-            textViewList = itemView.findViewById(R.id.text_view_list);
             textViewDate = itemView.findViewById(R.id.text_view_date);
             textViewFromEmail = itemView.findViewById(R.id.fromUserEmail);
             textViewVersion = itemView.findViewById(R.id.revision);
@@ -96,7 +95,6 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.SearchView
 
         if (darkModeOn) {
             holder.textViewTitle.setTextColor(ContextCompat.getColor(mContext, R.color.PrimaryLight));
-            holder.textViewList.setTextColor(ContextCompat.getColor(mContext, R.color.PrimaryLight));
             holder.textViewDate.setTextColor(ContextCompat.getColor(mContext, R.color.PrimaryLight));
             holder.textViewFromEmail.setTextColor(ContextCompat.getColor(mContext, R.color.PrimaryLight));
             holder.textViewVersion.setTextColor(ContextCompat.getColor(mContext, R.color.PrimaryLight));
@@ -107,7 +105,6 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.SearchView
 
         holder.textViewTitle.setText(currentItem.getTitle());
         holder.textViewDate.setText(getDate(currentItem.getTimeStamp(), "dd-MM-yyyy"));
-        holder.textViewFromEmail.setText(currentItem.getFromEmailAddress());
         holder.textViewVersion.setText("Version: " + currentItem.getVersion());
 
         holder.parentView.setOnClickListener(new View.OnClickListener() {
@@ -118,7 +115,6 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.SearchView
                 i.putExtra("collectionId", currentItem.getCallingFragment());
                 i.putExtra("uniqueId", currentItem.getId());
                 i.putExtra("listName", currentItem.getTitle());
-                i.putExtra("listAuthor", currentItem.getFromEmailAddress());
 
                 if(currentItem.getCallingFragment().equals("My_lists")) {
                     i.putExtra("callingFragment", "ListsFragment");
@@ -133,32 +129,30 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.SearchView
             }
         });
 
-        /*db.collection("Users").document(current_user_id).collection(currentItem.getCallingFragment()).document(currentItem.getId()).collection(currentItem.getId())
+        ArrayList<String> participantsEmailList = new ArrayList<>();
+
+        db.collection("Users").document(current_user_id).collection(currentItem.getCallingFragment()).document(currentItem.getId()).collection("Participants")
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()) {
 
-                            ArrayList<String> itemArrayList = new ArrayList<>();
-
                             for (QueryDocumentSnapshot document : task.getResult()) {
 
-                                Item item = document.toObject(Item.class);
-                                String setItem;
-                                if (item.getAmount().equals("0")) {
-                                    setItem = item.getName();
-                                } else {
-                                    setItem = item.getAmount() + " " + item.getName();
-                                }
-                                itemArrayList.add(setItem);
+                                User user = document.toObject(User.class);
+                                participantsEmailList.add(user.getEmailAddress());
                             }
-                            String formattedString = itemArrayList.toString().replace("[", "");
-                            String formattedString2 = formattedString.replace("]", "");
-                            holder.textViewList.setText(formattedString2);
+
+                            String emailAddressesString = participantsEmailList.toString();
+                            String emailAddressesString2 = emailAddressesString.replace("[", "");
+                            String emailAddressesString3 = emailAddressesString2.replace("]", "");
+                            String emailAddressesString4 = emailAddressesString3.replaceAll(",", "\n");
+                            String emailAddressesString5 = emailAddressesString4.replace(" ", "");
+                            holder.textViewFromEmail.setText(emailAddressesString5);
                         }
                     }
-                });*/
+                });
 
         holder.imageViewShare.setOnClickListener(new View.OnClickListener() {
             @Override

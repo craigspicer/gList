@@ -25,6 +25,9 @@ public interface ListDAO {
     @Query("DELETE FROM lists_table")
     void deleteAll();
 
-    @Query("SELECT * FROM lists_table WHERE lists_table.title LIKE '%' || :term || '%' OR lists_table.fromEmailAddress LIKE '%' || :term || '%' COLLATE NOCASE")
+    @Query("SELECT * FROM lists_table WHERE lists_table.title LIKE '%' || :term || '%' COLLATE NOCASE")
     List<ListEntity> search(String term);
+
+    //@Query("SELECT * FROM lists_table WHERE lists_table.title LIKE '%' || :term || '%' OR lists_table.fromEmailAddress LIKE '%' || :term || '%' COLLATE NOCASE")
+    //List<ListEntity> search(String term);
 }

@@ -12,18 +12,18 @@ public class ListEntity {
     private String id;
     private String title;
     private long timeStamp;
-    private String fromEmailAddress;
     private String version;
     private String callingFragment;
+    private String creatingFragment;
 
-    public ListEntity(String id, String title, long timeStamp, String fromEmailAddress, String version, String callingFragment) {
+    public ListEntity(String id, String title, long timeStamp, String version, String callingFragment, String creatingFragment) {
 
         this.id = id;
         this.title = title;
         this.timeStamp = timeStamp;
-        this.fromEmailAddress = fromEmailAddress;
         this.version = version;
         this.callingFragment = callingFragment;
+        this.creatingFragment = creatingFragment;
     }
 
     public void setAutoGenId(int autoGenId) {
@@ -46,15 +46,15 @@ public class ListEntity {
         return timeStamp;
     }
 
-    public String getFromEmailAddress() {
-        return fromEmailAddress;
-    }
-
     public String getVersion() {
         return version;
     }
 
     public String getCallingFragment() {
         return callingFragment;
+    }
+
+    public String getCreatingFragment() {
+        return creatingFragment;
     }
 }

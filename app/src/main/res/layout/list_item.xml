@@ -25,7 +25,7 @@
             android:id="@+id/text_view_title"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="16dp"
+            android:layout_marginEnd="24dp"
             android:ellipsize="end"
             android:maxLines="1"
             android:text="Title"
@@ -51,8 +51,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:layout_marginEnd="16dp"
-            android:text="From User Email"
+            android:layout_marginEnd="24dp"
             android:textColor="@color/PrimaryDark"
             android:textSize="12sp"
             app:layout_constraintEnd_toStartOf="@+id/revision"
@@ -79,18 +78,6 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/revision"
             app:srcCompat="@drawable/ic_share" />
-
-        <TextView
-            android:id="@+id/text_view_list"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:layout_marginEnd="16dp"
-            android:textColor="@color/PrimaryDark"
-            app:layout_constraintEnd_toStartOf="@+id/revision"
-            app:layout_constraintHorizontal_bias="1.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/fromUserEmail" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

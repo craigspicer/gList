@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -18,7 +19,6 @@
         android:textSize="16sp"
         app:layout_constraintBottom_toBottomOf="@+id/grocery_amount"
         app:layout_constraintEnd_toStartOf="@+id/grocery_amount"
-        app:layout_constraintRight_toLeftOf="@+id/grocery_amount"
         app:layout_constraintTop_toTopOf="@+id/grocery_amount" />
 
     <Button
@@ -26,14 +26,12 @@
         android:layout_width="50dp"
         android:layout_height="40dp"
         android:layout_marginStart="8dp"
-        android:layout_marginEnd="8dp"
         android:background="@drawable/rounded_edges"
         android:backgroundTint="@color/TertiaryDark"
         android:text="+"
         android:textColor="@color/PrimaryLight"
         android:textSize="16sp"
         app:layout_constraintBottom_toBottomOf="@+id/grocery_amount"
-        app:layout_constraintEnd_toStartOf="@+id/button_add"
         app:layout_constraintLeft_toRightOf="@+id/grocery_amount"
         app:layout_constraintStart_toEndOf="@+id/grocery_amount"
         app:layout_constraintTop_toTopOf="@+id/grocery_amount" />
@@ -83,12 +81,13 @@
         android:id="@+id/grocery_amount"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="8dp"
         android:text="0"
         android:textColor="@color/PrimaryDark"
         android:textSize="30sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/button_decrease"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/searchField" />
 
@@ -96,14 +95,14 @@
         android:id="@+id/recycler_view"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="8dp"
         android:fadeScrollbars="false"
         android:scrollbarThumbVertical="@color/Accent"
         android:scrollbars="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/grocery_amount" />
+        app:layout_constraintTop_toBottomOf="@+id/edit_text_cost" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab"
@@ -121,5 +120,25 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <EditText
+        android:id="@+id/edit_text_cost"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="32dp"
+        android:backgroundTint="@color/PrimaryLight"
+        android:ems="10"
+        android:gravity="center"
+        android:hint="Cost..."
+        android:inputType="number|numberDecimal"
+        android:textColor="@color/PrimaryDark"
+        android:textColorHint="@color/PrimaryDark"
+        android:textSize="14sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/button_add"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/grocery_amount" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

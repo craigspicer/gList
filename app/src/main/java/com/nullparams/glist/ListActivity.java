@@ -15,6 +15,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import androidx.core.content.ContextCompat;
+import androidx.core.graphics.drawable.DrawableCompat;
 import androidx.core.widget.ImageViewCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -40,7 +41,6 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
@@ -48,10 +48,10 @@ import com.google.firebase.firestore.QuerySnapshot;
 import com.nullparams.glist.adapters.ItemAdapter;
 import com.nullparams.glist.models.Item;
 import com.nullparams.glist.models.List;
+import com.nullparams.glist.models.Notification;
 import com.nullparams.glist.models.User;
 import com.nullparams.glist.util.GrocerySuggestions;
 
-import java.security.Policy;
 import java.util.ArrayList;
 import java.util.UUID;
 
@@ -77,11 +77,11 @@ public class ListActivity extends AppCompatActivity {
     private Toolbar toolbar;
     private TextView toolbarShare;
     private int updatedVersionInt;
-    private String mListAuthor;
     private String callingFragment;
     private String mCurrentUserEmail;
     private String listName;
     private boolean fromNotification;
+    private EditText editTextCost;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -105,7 +105,6 @@ public class ListActivity extends AppCompatActivity {
             collectionId = bundle.getString("collectionId");
             uniqueId = bundle.getString("uniqueId");
             listName = bundle.getString("listName");
-            mListAuthor = bundle.getString("listAuthor");
             callingFragment = bundle.getString("callingFragment");
 
             fromNotification = bundle.getBoolean("fromNotification");
@@ -147,7 +146,7 @@ public class ListActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toasty.info(context, "Swipe left or right to strike an item", Toast.LENGTH_LONG, true).show();
+                Toasty.info(context, "Swipe left to strike an item\nSwipe right to un-strike an item", Toast.LENGTH_LONG, true).show();
             }
         });
 
@@ -157,6 +156,7 @@ public class ListActivity extends AppCompatActivity {
         mEditTextName.setAdapter(adapter);
 
         mTextViewAmount = findViewById(R.id.grocery_amount);
+        editTextCost = findViewById(R.id.edit_text_cost);
 
         final Button buttonIncrease = findViewById(R.id.button_increase);
         buttonIncrease.setOnClickListener(new View.OnClickListener() {
@@ -207,6 +207,9 @@ public class ListActivity extends AppCompatActivity {
         toolbarShare.setTextColor(ContextCompat.getColor(context, R.color.PrimaryDark));
 
         mTextViewAmount.setTextColor(ContextCompat.getColor(context, R.color.PrimaryDark));
+        editTextCost.setTextColor(ContextCompat.getColor(context, R.color.PrimaryDark));
+        editTextCost.setHintTextColor(ContextCompat.getColor(context, R.color.PrimaryDark));
+        DrawableCompat.setTint(editTextCost.getBackground(), ContextCompat.getColor(context, R.color.PrimaryLight));
     }
 
     private void darkMode() {
@@ -224,6 +227,9 @@ public class ListActivity extends AppCompatActivity {
         toolbarShare.setTextColor(ContextCompat.getColor(context, R.color.PrimaryLight));
 
         mTextViewAmount.setTextColor(ContextCompat.getColor(context, R.color.PrimaryLight));
+        editTextCost.setTextColor(ContextCompat.getColor(context, R.color.PrimaryLight));
+        editTextCost.setHintTextColor(ContextCompat.getColor(context, R.color.PrimaryLight));
+        DrawableCompat.setTint(editTextCost.getBackground(), ContextCompat.getColor(context, R.color.SecondaryDark));
     }
 
     @Override
@@ -282,80 +288,55 @@ public class ListActivity extends AppCompatActivity {
 
         String name = mEditTextName.getText().toString();
         String amount = mTextViewAmount.getText().toString();
+        String cost = editTextCost.getText().toString();
 
         String randomItemId = UUID.randomUUID().toString();
 
-        DocumentReference listPath = mFireBaseFireStore.collection("Users").document(mCurrentUserId).collection(collectionId).document(uniqueId);
-        listPath.set(new List(uniqueId, listName, timeStamp, mListAuthor, Integer.toString(updatedVersionInt)));
+        if (callingFragment.equals("ListsFragment")) {
 
-        DocumentReference itemPath = mFireBaseFireStore.collection("Users").document(mCurrentUserId).collection(collectionId).document(uniqueId).collection(uniqueId).document(randomItemId);
-        itemPath.set(new Item(randomItemId, amount, name, false));
+            DocumentReference listPath = mFireBaseFireStore.collection("Users").document(mCurrentUserId).collection(collectionId).document(uniqueId);
+            listPath.set(new List(uniqueId, listName, timeStamp, Integer.toString(updatedVersionInt), "ListsFragment"));
 
-        if (callingFragment.equals("SharedFragment")) {
+            DocumentReference itemPath = mFireBaseFireStore.collection("Users").document(mCurrentUserId).collection(collectionId).document(uniqueId).collection(uniqueId).document(randomItemId);
+            itemPath.set(new Item(randomItemId, amount, name, false, cost));
 
-            DocumentReference userDetailsRef = mFireBaseFireStore.collection("User_list").document(mListAuthor);
-            userDetailsRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                @Override
-                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                    if (task.isSuccessful()) {
-                        DocumentSnapshot document = task.getResult();
-                        if (document.exists()) {
+            //Set participants
+            DocumentReference currentUserParticipantsPath = mFireBaseFireStore.collection("Users").document(mCurrentUserId).collection("My_lists").document(uniqueId).collection("Participants").document(mCurrentUserEmail);
+            currentUserParticipantsPath.set(new User(mCurrentUserId, mCurrentUserEmail));
 
-                            User user = document.toObject(User.class);
-                            String sharedUserId = user.getId();
+        } else if (callingFragment.equals("SharedFragment")) {
 
-                            DocumentReference listPath = mFireBaseFireStore.collection("Users").document(sharedUserId).collection("Shared_lists").document(uniqueId);
-                            listPath.set(new List(uniqueId, listName, timeStamp, mCurrentUserEmail, Integer.toString(updatedVersionInt)));
+            mFireBaseFireStore.collection("Users").document(mCurrentUserId).collection("Shared_lists").document(uniqueId).collection("Participants")
+                    .get()
+                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                            if (task.isSuccessful()) {
 
-                            //Write notification for shared user
-                            DocumentReference notificationPath = mFireBaseFireStore.collection("Users").document(sharedUserId).collection("Notifications").document();
-                            notificationPath.set(new List(uniqueId, listName, timeStamp, mCurrentUserEmail, Integer.toString(updatedVersionInt)));
+                                for (QueryDocumentSnapshot document : task.getResult()) {
 
-                            mFireBaseFireStore.collection("Users").document(sharedUserId).collection("Shared_lists").document(uniqueId).collection(uniqueId)
-                                    .get()
-                                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                                        @Override
-                                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                            if (task.isSuccessful()) {
-                                                for (QueryDocumentSnapshot document : task.getResult()) {
+                                    User user = document.toObject(User.class);
+                                    String sharedUserId = user.getId();
 
-                                                    Item item = document.toObject(Item.class);
+                                    if (!sharedUserId.equals(mCurrentUserId)) {
 
-                                                    DocumentReference sharedUserItemsPath = mFireBaseFireStore.collection("Users").document(sharedUserId).collection("Shared_lists").document(uniqueId).collection(uniqueId).document(item.getId());
-                                                    sharedUserItemsPath.delete();
-                                                }
+                                        //Write notification for shared user
+                                        DocumentReference notificationPath = mFireBaseFireStore.collection("Users").document(sharedUserId).collection("Notifications").document();
+                                        notificationPath.set(new Notification(uniqueId, listName, Integer.toString(updatedVersionInt)));
+                                    }
 
-                                                mFireBaseFireStore.collection("Users").document(mCurrentUserId).collection("Shared_lists").document(uniqueId).collection(uniqueId)
-                                                        .get()
-                                                        .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                                                            @Override
-                                                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                                                if (task.isSuccessful()) {
-                                                                    for (QueryDocumentSnapshot document : task.getResult()) {
+                                    DocumentReference listPath = mFireBaseFireStore.collection("Users").document(sharedUserId).collection("Shared_lists").document(uniqueId);
+                                    listPath.set(new List(uniqueId, listName, timeStamp, Integer.toString(updatedVersionInt), "SharedFragment"));
 
-                                                                        Item item = document.toObject(Item.class);
+                                    DocumentReference itemPath = mFireBaseFireStore.collection("Users").document(sharedUserId).collection("Shared_lists").document(uniqueId).collection(uniqueId).document(randomItemId);
+                                    itemPath.set(new Item(randomItemId, amount, name, false, cost));
+                                }
 
-                                                                        if (item.getStrike()) {
-                                                                            DocumentReference itemPath = mFireBaseFireStore.collection("Users").document(sharedUserId).collection("Shared_lists").document(uniqueId).collection(uniqueId).document(item.getId());
-                                                                            itemPath.set(new Item(item.getId(), item.getAmount(), item.getName(), true));
-                                                                        } else {
-                                                                            DocumentReference itemPath = mFireBaseFireStore.collection("Users").document(sharedUserId).collection("Shared_lists").document(uniqueId).collection(uniqueId).document(item.getId());
-                                                                            itemPath.set(new Item(item.getId(), item.getAmount(), item.getName(), false));
-                                                                        }
-                                                                    }
-                                                                }
-                                                            }
-                                                        });
-                                            }
-                                        }
-                                    });
+                            } else {
+                                Toasty.error(context, "Please ensure that there is an active network connection to share a list", Toast.LENGTH_LONG, true).show();
+                            }
                         }
-
-                    } else {
-                        Toasty.error(context, "Please ensure that there is an active network connection to share a list", Toast.LENGTH_LONG, true).show();
-                    }
-                }
-            });
+                    });
         }
 
         mTextViewAmount.setText("0");
@@ -371,7 +352,7 @@ public class ListActivity extends AppCompatActivity {
                 .setQuery(query, Item.class)
                 .build();
 
-        adapter = new ItemAdapter(options, sharedPreferences, context, callingFragment, mListAuthor, uniqueId);
+        adapter = new ItemAdapter(options, sharedPreferences, context, callingFragment, uniqueId);
 
         final RecyclerView recyclerView = findViewById(R.id.recycler_view);
         recyclerView.setHasFixedSize(true);
@@ -400,7 +381,7 @@ public class ListActivity extends AppCompatActivity {
 
             @Override
             public void onSwiped(final RecyclerView.ViewHolder viewHolder, int direction) {
-                adapter.strikeItem(viewHolder.getAdapterPosition());
+                adapter.unStrikeItem(viewHolder.getAdapterPosition());
             }
         }).attachToRecyclerView(recyclerView);
     }
@@ -453,14 +434,18 @@ public class ListActivity extends AppCompatActivity {
                             for (QueryDocumentSnapshot document : task.getResult()) {
 
                                 Item item = document.toObject(Item.class);
-                                String setItem;
-                                if (item.getAmount().equals("0")) {
-                                    setItem = item.getName();
-                                } else {
-                                    setItem = item.getAmount() + " " + item.getName();
+
+                                if (!item.getStrike()) {
+                                    String setItem;
+                                    if (item.getAmount().equals("0")) {
+                                        setItem = item.getName();
+                                    } else {
+                                        setItem = item.getAmount() + " " + item.getName();
+                                    }
+                                    itemArrayList.add(setItem);
                                 }
-                                itemArrayList.add(setItem);
                             }
+
                             if (itemArrayList.isEmpty()) {
                                 Toasty.info(context, "This list is empty", Toast.LENGTH_LONG, true).show();
 

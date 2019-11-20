@@ -185,7 +185,6 @@ public class ListsFragment extends Fragment {
                 i.putExtra("collectionId", "My_lists");
                 i.putExtra("uniqueId", documentSnapshot.getId());
                 i.putExtra("listName", list.getTitle());
-                i.putExtra("listAuthor", list.getFromEmailAddress());
                 i.putExtra("callingFragment", "ListsFragment");
                 i.putExtra("fromNotification", false);
                 startActivity(i);

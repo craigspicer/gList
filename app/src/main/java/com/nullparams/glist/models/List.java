@@ -5,20 +5,20 @@ public class List {
     private String id;
     private String title;
     private long timeStamp;
-    private String fromEmailAddress;
     private String version;
+    private String creatingFragment;
 
     public List() {
         //empty constructor needed
     }
 
-    public List(String id, String title, long timeStamp, String fromEmailAddress, String version) {
+    public List(String id, String title, long timeStamp, String version, String creatingFragment) {
 
         this.id = id;
         this.title = title;
         this.timeStamp = timeStamp;
-        this.fromEmailAddress = fromEmailAddress;
         this.version = version;
+        this.creatingFragment = creatingFragment;
     }
 
     public String getId() {
@@ -33,11 +33,11 @@ public class List {
         return timeStamp;
     }
 
-    public String getFromEmailAddress() {
-        return fromEmailAddress;
-    }
-
     public String getVersion() {
         return version;
+    }
+
+    public String getCreatingFragment() {
+        return creatingFragment;
     }
 }

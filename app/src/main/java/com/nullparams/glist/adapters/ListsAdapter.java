@@ -23,6 +23,7 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -33,6 +34,8 @@ import com.nullparams.glist.R;
 import com.nullparams.glist.ShareActivity;
 import com.nullparams.glist.models.Item;
 import com.nullparams.glist.models.List;
+import com.nullparams.glist.models.User;
+
 import android.content.Context;
 import android.widget.Toast;
 
@@ -51,8 +54,11 @@ public class ListsAdapter extends FirestoreRecyclerAdapter<List, ListsAdapter.Li
     private FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
     private String current_user_id = firebaseAuth.getCurrentUser().getUid();
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
+    private FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
+    private String currentUserEmail = firebaseUser.getEmail();
     private String mCallingFragment;
     private Activity mActivity;
+    private String mCreatingFragment;
 
     public ListsAdapter(@NonNull FirestoreRecyclerOptions<List> options, SharedPreferences sharedPreferences, Context context, String callingFragment, Activity activity) {
         super(options);
@@ -65,9 +71,10 @@ public class ListsAdapter extends FirestoreRecyclerAdapter<List, ListsAdapter.Li
     @Override
     protected void onBindViewHolder(@NonNull ListHolder holder, int position, @NonNull List model) {
 
+        mCreatingFragment = model.getCreatingFragment();
+
         if (darkModeOn) {
             holder.textViewTitle.setTextColor(ContextCompat.getColor(mContext, R.color.PrimaryLight));
-            holder.textViewList.setTextColor(ContextCompat.getColor(mContext, R.color.PrimaryLight));
             holder.textViewDate.setTextColor(ContextCompat.getColor(mContext, R.color.PrimaryLight));
             holder.textViewFromEmail.setTextColor(ContextCompat.getColor(mContext, R.color.PrimaryLight));
             holder.textViewVersion.setTextColor(ContextCompat.getColor(mContext, R.color.PrimaryLight));
@@ -78,35 +85,32 @@ public class ListsAdapter extends FirestoreRecyclerAdapter<List, ListsAdapter.Li
 
         holder.textViewTitle.setText(model.getTitle());
         holder.textViewDate.setText(getDate(model.getTimeStamp(), "dd-MM-yyyy"));
-        holder.textViewFromEmail.setText(model.getFromEmailAddress());
         holder.textViewVersion.setText("Version: " + model.getVersion());
 
-        /*db.collection("Users").document(current_user_id).collection(mCallingFragment).document(model.getId()).collection(model.getId())
+        ArrayList<String> participantsEmailList = new ArrayList<>();
+
+        db.collection("Users").document(current_user_id).collection(mCallingFragment).document(model.getId()).collection("Participants")
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()) {
 
-                            ArrayList<String> itemArrayList = new ArrayList<>();
-
                             for (QueryDocumentSnapshot document : task.getResult()) {
 
-                                Item item = document.toObject(Item.class);
-                                String setItem;
-                                if (item.getAmount().equals("0")) {
-                                    setItem = item.getName();
-                                } else {
-                                    setItem = item.getAmount() + " " + item.getName();
-                                }
-                                itemArrayList.add(setItem);
+                                User user = document.toObject(User.class);
+                                participantsEmailList.add(user.getEmailAddress());
                             }
-                            String formattedString = itemArrayList.toString().replace("[", "");
-                            String formattedString2 = formattedString.replace("]", "");
-                            holder.textViewList.setText(formattedString2);
+
+                            String emailAddressesString = participantsEmailList.toString();
+                            String emailAddressesString2 = emailAddressesString.replace("[", "");
+                            String emailAddressesString3 = emailAddressesString2.replace("]", "");
+                            String emailAddressesString4 = emailAddressesString3.replaceAll(",", "\n");
+                            String emailAddressesString5 = emailAddressesString4.replace(" ", "");
+                            holder.textViewFromEmail.setText(emailAddressesString5);
                         }
                     }
-                });*/
+                });
 
         holder.imageViewShare.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -124,14 +128,18 @@ public class ListsAdapter extends FirestoreRecyclerAdapter<List, ListsAdapter.Li
                                     for (QueryDocumentSnapshot document : task.getResult()) {
 
                                         Item item = document.toObject(Item.class);
-                                        String setItem;
-                                        if (item.getAmount().equals("0")) {
-                                            setItem = item.getName();
-                                        } else {
-                                            setItem = item.getAmount() + " " + item.getName();
+
+                                        if (!item.getStrike()) {
+                                            String setItem;
+                                            if (item.getAmount().equals("0")) {
+                                                setItem = item.getName();
+                                            } else {
+                                                setItem = item.getAmount() + " " + item.getName();
+                                            }
+                                            itemArrayList.add(setItem);
                                         }
-                                        itemArrayList.add(setItem);
                                     }
+
                                     if (itemArrayList.isEmpty()) {
                                         Toasty.info(mContext, "This list is empty", Toast.LENGTH_LONG, true).show();
 
@@ -184,6 +192,22 @@ public class ListsAdapter extends FirestoreRecyclerAdapter<List, ListsAdapter.Li
                 });
 
         getSnapshots().getSnapshot(position).getReference().delete();
+
+        CollectionReference fromFolderParticipants = db.collection("Users").document(current_user_id).collection("Bin").document(id).collection("Participants");
+        fromFolderParticipants.get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+
+                                DocumentReference deleteRef = db.collection("Users").document(current_user_id).collection("Bin").document(id).collection("Participants").document(document.getId());
+                                deleteRef.delete();
+
+                            }
+                        }
+                    }
+                });
     }
 
     //Move - My_lists to Bin
@@ -213,9 +237,25 @@ public class ListsAdapter extends FirestoreRecyclerAdapter<List, ListsAdapter.Li
         DocumentReference from = snapshot.getReference();
         DocumentReference to = db.collection("Users").document(current_user_id).collection("Bin").document(id);
         moveFirestoreDocument(from, to);
+
+        CollectionReference fromFolderParticipants = db.collection("Users").document(current_user_id).collection("My_lists").document(id).collection("Participants");
+        fromFolderParticipants.get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+
+                                DocumentReference fromReference = db.collection("Users").document(current_user_id).collection("My_lists").document(id).collection("Participants").document(document.getId());
+                                DocumentReference toReference = db.collection("Users").document(current_user_id).collection("Bin").document(id).collection("Participants").document(document.getId());
+                                moveFirestoreDocument(fromReference, toReference);
+                            }
+                        }
+                    }
+                });
     }
 
-    //Move - Bin to Notebook
+    //Move - Restore
     public void moveItem2(int position) {
 
         getSnapshots().getSnapshot(position).getReference();
@@ -232,16 +272,99 @@ public class ListsAdapter extends FirestoreRecyclerAdapter<List, ListsAdapter.Li
                             for (QueryDocumentSnapshot document : task.getResult()) {
 
                                 DocumentReference fromReference = db.collection("Users").document(current_user_id).collection("Bin").document(id).collection(id).document(document.getId());
-                                DocumentReference toReference = db.collection("Users").document(current_user_id).collection("My_lists").document(id).collection(id).document(document.getId());
-                                moveFirestoreDocument(fromReference, toReference);
+
+                                if (mCreatingFragment.equals("SharedFragment")) {
+
+                                    DocumentReference toReference = db.collection("Users").document(current_user_id).collection("Shared_lists").document(id).collection(id).document(document.getId());
+                                    moveFirestoreDocument(fromReference, toReference);
+
+                                } else if (mCreatingFragment.equals("ListsFragment")) {
+
+                                    DocumentReference toReference = db.collection("Users").document(current_user_id).collection("My_lists").document(id).collection(id).document(document.getId());
+                                    moveFirestoreDocument(fromReference, toReference);
+                                }
                             }
                         }
                     }
                 });
 
         DocumentReference from = db.collection("Users").document(current_user_id).collection("Bin").document(id);
-        DocumentReference to = db.collection("Users").document(current_user_id).collection("My_lists").document(id);
-        moveFirestoreDocument(from, to);
+
+        if (mCreatingFragment.equals("SharedFragment")) {
+
+            DocumentReference to = db.collection("Users").document(current_user_id).collection("Shared_lists").document(id);
+            moveFirestoreDocument(from, to);
+
+            // Restore user as participant
+            java.util.List<User> userList = new ArrayList<>();
+
+            db.collection("Users").document(current_user_id).collection("Bin").document(id).collection("Participants")
+                    .get()
+                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                            if (task.isSuccessful()) {
+
+                                for (QueryDocumentSnapshot document : task.getResult()) {
+
+                                    User user = document.toObject(User.class);
+                                    String userId = user.getId();
+
+                                    db.collection("Users").document(userId).collection("Shared_lists").document(id).collection("Participants")
+                                            .get()
+                                            .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                                @Override
+                                                public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                                    if (task.isSuccessful()) {
+
+                                                        for (QueryDocumentSnapshot document : task.getResult()) {
+
+                                                            User user = document.toObject(User.class);
+
+                                                            DocumentReference userParticipantsPath = db.collection("Users").document(user.getId()).collection("Shared_lists").document(id).collection("Participants").document(currentUserEmail);
+                                                            userParticipantsPath.set(new User(current_user_id, currentUserEmail));
+                                                        }
+                                                    }
+                                                }
+                                            });
+                                }
+                            }
+                        }
+                    });
+
+        } else if (mCreatingFragment.equals("ListsFragment")) {
+
+            DocumentReference to = db.collection("Users").document(current_user_id).collection("My_lists").document(id);
+            moveFirestoreDocument(from, to);
+        }
+
+        CollectionReference fromFolderParticipants = db.collection("Users").document(current_user_id).collection("Bin").document(id).collection("Participants");
+        fromFolderParticipants.get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+
+                                DocumentReference fromReference = db.collection("Users").document(current_user_id).collection("Bin").document(id).collection("Participants").document(document.getId());
+
+                                if (mCreatingFragment.equals("SharedFragment")) {
+
+                                    DocumentReference toReference = db.collection("Users").document(current_user_id).collection("Shared_lists").document(id).collection("Participants").document(document.getId());
+                                    moveFirestoreDocument(fromReference, toReference);
+
+                                    DocumentReference userParticipantsPath = db.collection("Users").document(current_user_id).collection("Shared_lists").document(id).collection("Participants").document(currentUserEmail);
+                                    userParticipantsPath.set(new User(current_user_id, currentUserEmail));
+
+                                } else if (mCreatingFragment.equals("ListsFragment")) {
+
+                                    DocumentReference toReference = db.collection("Users").document(current_user_id).collection("My_lists").document(id).collection("Participants").document(document.getId());
+                                    moveFirestoreDocument(fromReference, toReference);
+                                }
+                            }
+                        }
+                    }
+                });
     }
 
     //Move - Shared_lists to Bin
@@ -271,12 +394,75 @@ public class ListsAdapter extends FirestoreRecyclerAdapter<List, ListsAdapter.Li
         DocumentReference from = snapshot.getReference();
         DocumentReference to = db.collection("Users").document(current_user_id).collection("Bin").document(id);
         moveFirestoreDocument(from, to);
+
+        ArrayList<String> userIdList = new ArrayList<>();
+
+        CollectionReference fromFolderParticipants = db.collection("Users").document(current_user_id).collection("Shared_lists").document(id).collection("Participants");
+        fromFolderParticipants.get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+
+                                User user = document.toObject(User.class);
+                                String allUserIds = user.getId();
+
+                                userIdList.add(allUserIds);
+
+                                CollectionReference fromFolderParticipants = db.collection("Users").document(allUserIds).collection("Shared_lists").document(id).collection("Participants");
+                                fromFolderParticipants.get()
+                                        .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                            @Override
+                                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                                if (task.isSuccessful()) {
+                                                    for (QueryDocumentSnapshot document : task.getResult()) {
+
+                                                        User user = document.toObject(User.class);
+                                                        String userId = user.getId();
+
+                                                        for (String thisUserId : userIdList) {
+
+                                                            if (userId.equals(current_user_id)) {
+
+                                                                DocumentReference deleteCurrentUserRef = db.collection("Users").document(thisUserId).collection("Shared_lists").document(id).collection("Participants").document(currentUserEmail);
+                                                                deleteCurrentUserRef.delete();
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        });
+                            }
+                        }
+                    }
+                });
+
+        fromFolderParticipants.get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+
+                                User user = document.toObject(User.class);
+                                String userId = user.getId();
+
+                                if (!userId.equals(current_user_id)) {
+
+                                    DocumentReference fromReference = db.collection("Users").document(current_user_id).collection("Shared_lists").document(id).collection("Participants").document(document.getId());
+                                    DocumentReference toReference = db.collection("Users").document(current_user_id).collection("Bin").document(id).collection("Participants").document(document.getId());
+                                    moveFirestoreDocument(fromReference, toReference);
+                                }
+                            }
+                        }
+                    }
+                });
     }
 
     class ListHolder extends RecyclerView.ViewHolder {
 
         TextView textViewTitle;
-        TextView textViewList;
         TextView textViewDate;
         TextView textViewFromEmail;
         TextView textViewVersion;
@@ -288,7 +474,6 @@ public class ListsAdapter extends FirestoreRecyclerAdapter<List, ListsAdapter.Li
             super(itemView);
 
             textViewTitle = itemView.findViewById(R.id.text_view_title);
-            textViewList = itemView.findViewById(R.id.text_view_list);
             textViewDate = itemView.findViewById(R.id.text_view_date);
             textViewFromEmail = itemView.findViewById(R.id.fromUserEmail);
             textViewVersion = itemView.findViewById(R.id.revision);

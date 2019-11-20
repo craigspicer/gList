@@ -65,7 +65,6 @@ public class MainActivity extends AppCompatActivity {
     private AutoCompleteTextView searchField;
     private BottomNavigationView bottomNav;
     private ImageView imageViewToolbarAdd;
-    private String mCurrentUserEmail;
     private Repository repository;
     private ArrayList<String> searchSuggestions = new ArrayList<>();
     private java.util.List<RecentSearchesEntity> recentSearchesList = new ArrayList<>();
@@ -128,7 +127,6 @@ public class MainActivity extends AppCompatActivity {
         FirebaseUser firebaseUser = mFirebaseAuth.getCurrentUser();
         if (firebaseUser != null) {
             mCurrentUserId = firebaseUser.getUid();
-            mCurrentUserEmail = firebaseUser.getEmail();
         }
 
         window = this.getWindow();
@@ -150,8 +148,7 @@ public class MainActivity extends AppCompatActivity {
                 i.putExtra("version", "0");
                 i.putExtra("collectionId", "My_lists");
                 i.putExtra("uniqueId", uniqueId);
-                i.putExtra("listAuthor", mCurrentUserEmail);
-                i.putExtra("callingFragment", "MainActivity");
+                i.putExtra("callingFragment", "ListsFragment");
                 i.putExtra("fromNotification", false);
                 startActivity(i);
                 overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
@@ -257,10 +254,6 @@ public class MainActivity extends AppCompatActivity {
                                 if (!searchSuggestions.contains(list.getTitle())) {
                                     searchSuggestions.add(list.getTitle());
                                 }
-
-                                if (!searchSuggestions.contains(list.getFromEmailAddress())) {
-                                    searchSuggestions.add(list.getFromEmailAddress());
-                                }
                             }
                         }
                     }
@@ -280,10 +273,6 @@ public class MainActivity extends AppCompatActivity {
                                 if (!searchSuggestions.contains(list.getTitle())) {
                                     searchSuggestions.add(list.getTitle());
                                 }
-
-                                if (!searchSuggestions.contains(list.getFromEmailAddress())) {
-                                    searchSuggestions.add(list.getFromEmailAddress());
-                                }
                             }
                         }
                     }
@@ -302,10 +291,6 @@ public class MainActivity extends AppCompatActivity {
 
                                 if (!searchSuggestions.contains(list.getTitle())) {
                                     searchSuggestions.add(list.getTitle());
-                                }
-
-                                if (!searchSuggestions.contains(list.getFromEmailAddress())) {
-                                    searchSuggestions.add(list.getFromEmailAddress());
                                 }
                             }
                         }
@@ -328,7 +313,7 @@ public class MainActivity extends AppCompatActivity {
 
                                 List list = document.toObject(List.class);
 
-                                ListEntity listEntity = new ListEntity(list.getId(), list.getTitle(), list.getTimeStamp(), list.getFromEmailAddress(), list.getVersion(), "My_lists");
+                                ListEntity listEntity = new ListEntity(list.getId(), list.getTitle(), list.getTimeStamp(), list.getVersion(), "My_lists", list.getCreatingFragment());
                                 repository.insert(listEntity);
                             }
                         }
@@ -346,7 +331,7 @@ public class MainActivity extends AppCompatActivity {
 
                                 List list = document.toObject(List.class);
 
-                                ListEntity listEntity = new ListEntity(list.getId(), list.getTitle(), list.getTimeStamp(), list.getFromEmailAddress(), list.getVersion(), "Shared_lists");
+                                ListEntity listEntity = new ListEntity(list.getId(), list.getTitle(), list.getTimeStamp(), list.getVersion(), "Shared_lists", list.getCreatingFragment());
                                 repository.insert(listEntity);
                             }
                         }
@@ -364,7 +349,7 @@ public class MainActivity extends AppCompatActivity {
 
                                 List list = document.toObject(List.class);
 
-                                ListEntity listEntity = new ListEntity(list.getId(), list.getTitle(), list.getTimeStamp(), list.getFromEmailAddress(), list.getVersion(), "Bin");
+                                ListEntity listEntity = new ListEntity(list.getId(), list.getTitle(), list.getTimeStamp(), list.getVersion(), "Bin", list.getCreatingFragment());
                                 repository.insert(listEntity);
                             }
 

@@ -1,2 +1,0 @@
-# gList
-List sharing

@@ -224,7 +224,6 @@ public class BinFragment extends Fragment {
                 i.putExtra("collectionId", "Bin");
                 i.putExtra("uniqueId", documentSnapshot.getId());
                 i.putExtra("listName", list.getTitle());
-                i.putExtra("listAuthor", list.getFromEmailAddress());
                 i.putExtra("callingFragment", "BinFragment");
                 i.putExtra("fromNotification", false);
                 startActivity(i);
