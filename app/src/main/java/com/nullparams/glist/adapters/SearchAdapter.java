@@ -104,7 +104,7 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.SearchView
         }
 
         holder.textViewTitle.setText(currentItem.getTitle());
-        holder.textViewDate.setText(getDate(currentItem.getTimeStamp(), "dd-MM-yyyy"));
+        holder.textViewDate.setText(getDate(currentItem.getTimeStamp(), "HH:mm\ndd-MM-yyyy"));
         holder.textViewVersion.setText("Version: " + currentItem.getVersion());
 
         holder.parentView.setOnClickListener(new View.OnClickListener() {

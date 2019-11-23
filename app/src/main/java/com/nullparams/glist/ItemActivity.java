@@ -236,6 +236,11 @@ public class ItemActivity extends AppCompatActivity {
             DocumentReference itemPath = mFireBaseFireStore.collection("Users").document(mCurrentUserId).collection(collectionId).document(uniqueId).collection(uniqueId).document(itemId);
             itemPath.set(new Item(itemId, amount, name, strike, cost));
 
+            long timeStamp = System.currentTimeMillis();
+
+            DocumentReference listRef = mFireBaseFireStore.collection("Users").document(mCurrentUserId).collection("My_lists").document(uniqueId);
+            listRef.update("timeStamp", timeStamp);
+
         } else if (collectionId.equals("Shared_lists")) {
 
             mFireBaseFireStore.collection("Users").document(mCurrentUserId).collection("Shared_lists").document(uniqueId).collection("Participants")
@@ -263,6 +268,11 @@ public class ItemActivity extends AppCompatActivity {
 
                                                             DocumentReference itemPath = mFireBaseFireStore.collection("Users").document(user.getId()).collection("Shared_lists").document(uniqueId).collection(uniqueId).document(itemId);
                                                             itemPath.set(new Item(itemId, amount, name, strike, cost));
+
+                                                            long timeStamp = System.currentTimeMillis();
+
+                                                            DocumentReference listRef = mFireBaseFireStore.collection("Users").document(user.getId()).collection("Shared_lists").document(uniqueId);
+                                                            listRef.update("timeStamp", timeStamp);
                                                         }
                                                     }
                                                 }
@@ -275,5 +285,6 @@ public class ItemActivity extends AppCompatActivity {
 
         Toasty.info(context, "Item updated", Toast.LENGTH_LONG, true).show();
         finish();
+        overridePendingTransition(R.anim.push_right_in, R.anim.push_right_out);
     }
 }

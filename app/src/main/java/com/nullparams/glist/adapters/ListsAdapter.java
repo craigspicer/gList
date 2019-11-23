@@ -84,7 +84,7 @@ public class ListsAdapter extends FirestoreRecyclerAdapter<List, ListsAdapter.Li
         }
 
         holder.textViewTitle.setText(model.getTitle());
-        holder.textViewDate.setText(getDate(model.getTimeStamp(), "dd-MM-yyyy"));
+        holder.textViewDate.setText(getDate(model.getTimeStamp(), "HH:mm\ndd-MM-yyyy"));
         holder.textViewVersion.setText("Version: " + model.getVersion());
 
         ArrayList<String> participantsEmailList = new ArrayList<>();

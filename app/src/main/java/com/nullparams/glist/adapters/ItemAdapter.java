@@ -97,6 +97,12 @@ public class ItemAdapter extends FirestoreRecyclerAdapter<Item, ItemAdapter.Item
 
                             if (!item.getStrike()) {
                                 getSnapshots().getSnapshot(position).getReference().update("strike", true);
+
+                                long timeStamp = System.currentTimeMillis();
+
+                                DocumentReference listRef = mFireBaseFireStore.collection("Users").document(mCurrentUserId).collection("My_lists").document(mUniqueId);
+                                listRef.update("timeStamp", timeStamp);
+
                             } else {
                                 notifyDataSetChanged();
                             }
@@ -130,6 +136,12 @@ public class ItemAdapter extends FirestoreRecyclerAdapter<Item, ItemAdapter.Item
                                                     if (!item.getStrike()) {
                                                         DocumentReference itemPath = mFireBaseFireStore.collection("Users").document(sharedUserId).collection("Shared_lists").document(mUniqueId).collection(mUniqueId).document(document.getId());
                                                         itemPath.update("strike", true);
+
+                                                        long timeStamp = System.currentTimeMillis();
+
+                                                        DocumentReference listRef = mFireBaseFireStore.collection("Users").document(sharedUserId).collection("Shared_lists").document(mUniqueId);
+                                                        listRef.update("timeStamp", timeStamp);
+
                                                     } else {
                                                         notifyDataSetChanged();
                                                     }
@@ -158,6 +170,12 @@ public class ItemAdapter extends FirestoreRecyclerAdapter<Item, ItemAdapter.Item
 
                             if (item.getStrike()) {
                                 getSnapshots().getSnapshot(position).getReference().update("strike", false);
+
+                                long timeStamp = System.currentTimeMillis();
+
+                                DocumentReference listRef = mFireBaseFireStore.collection("Users").document(mCurrentUserId).collection("My_lists").document(mUniqueId);
+                                listRef.update("timeStamp", timeStamp);
+
                             } else {
                                 notifyDataSetChanged();
                             }
@@ -191,6 +209,12 @@ public class ItemAdapter extends FirestoreRecyclerAdapter<Item, ItemAdapter.Item
                                                     if (item.getStrike()) {
                                                         DocumentReference itemPath = mFireBaseFireStore.collection("Users").document(sharedUserId).collection("Shared_lists").document(mUniqueId).collection(mUniqueId).document(document.getId());
                                                         itemPath.update("strike", false);
+
+                                                        long timeStamp = System.currentTimeMillis();
+
+                                                        DocumentReference listRef = mFireBaseFireStore.collection("Users").document(sharedUserId).collection("Shared_lists").document(mUniqueId);
+                                                        listRef.update("timeStamp", timeStamp);
+
                                                     } else {
                                                         notifyDataSetChanged();
                                                     }
