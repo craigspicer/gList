@@ -101,7 +101,7 @@
                 tools:targetApi="o" />
 
             <Button
-                android:id="@+id/button_sign_up"
+                android:id="@+id/button_confirm"
                 android:layout_width="0dp"
                 android:layout_height="35dp"
                 android:layout_marginStart="32dp"
@@ -109,7 +109,7 @@
                 android:layout_marginEnd="32dp"
                 android:background="@drawable/rounded_edges"
                 android:backgroundTint="@color/Accent"
-                android:text="Sign Up"
+                android:text="Confirm"
                 android:textAllCaps="false"
                 android:textColor="@color/PrimaryLight"
                 android:textSize="14sp"
@@ -119,63 +119,6 @@
                 app:layout_constraintTop_toBottomOf="@+id/edit_text_confirm_password" />
 
             <TextView
-                android:id="@+id/text_view_or"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:text="or"
-                android:textColor="@color/Accent"
-                android:textSize="16sp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/button_sign_up" />
-
-            <Button
-                android:id="@+id/button_sign_up_later"
-                android:layout_width="0dp"
-                android:layout_height="35dp"
-                android:layout_marginStart="32dp"
-                android:layout_marginTop="8dp"
-                android:layout_marginEnd="32dp"
-                android:background="@drawable/rounded_edges"
-                android:backgroundTint="@color/Accent"
-                android:text="I'll Sign Up Later"
-                android:textAllCaps="false"
-                android:textColor="@color/PrimaryLight"
-                android:textSize="14sp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/text_view_or" />
-
-            <TextView
-                android:id="@+id/text_view_go_to_sign_in"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="32dp"
-                android:layout_marginTop="24dp"
-                android:layout_marginEnd="32dp"
-                android:text="Already have an account?"
-                android:textColor="@color/PrimaryDark"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/button_sign_up_later" />
-
-            <TextView
-                android:id="@+id/text_view_go_to_sign_in_2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Sign in"
-                android:textColor="@color/Accent"
-                android:textStyle="bold"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/text_view_go_to_sign_in" />
-
-            <TextView
                 android:id="@+id/dummy"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -183,28 +126,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/text_view_go_to_sign_in_2" />
-
-            <ImageView
-                android:id="@+id/image_view_dark_mode"
-                android:layout_width="35dp"
-                android:layout_height="35dp"
-                android:layout_marginTop="16dp"
-                android:layout_marginEnd="16dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/ic_dark_mode" />
-
-            <ImageView
-                android:id="@+id/image_view_light_mode"
-                android:layout_width="35dp"
-                android:layout_height="35dp"
-                android:layout_marginTop="16dp"
-                android:layout_marginEnd="16dp"
-                android:visibility="gone"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/ic_light_mode" />
+                app:layout_constraintTop_toBottomOf="@+id/button_confirm" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

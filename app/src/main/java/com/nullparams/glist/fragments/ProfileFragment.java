@@ -33,13 +33,18 @@ import android.widget.Toast;
 
 import com.daimajia.androidanimations.library.Techniques;
 import com.daimajia.androidanimations.library.YoYo;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.auth.AuthCredential;
+import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.nullparams.glist.R;
-import com.nullparams.glist.RegisterActivity;
+import com.nullparams.glist.SignInActivity;
+import com.nullparams.glist.UpdateUserDetailsActivity;
 import com.nullparams.glist.database.GlistDatabase;
 import com.nullparams.glist.repository.Repository;
 import com.squareup.picasso.Picasso;
@@ -47,6 +52,10 @@ import com.squareup.picasso.Picasso;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.math.BigInteger;
+import java.nio.charset.Charset;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 
 import es.dmoral.toasty.Toasty;
 
@@ -76,6 +85,8 @@ public class ProfileFragment extends Fragment {
     private ImageView imageViewToolbarAdd;
     private ImageView clearSearchHistory;
     private String mCurrentUserEmail;
+    private FirebaseUser firebaseUser;
+    private TextView textViewUpdateDetails;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -90,13 +101,13 @@ public class ProfileFragment extends Fragment {
         searchField.setVisibility(View.GONE);
 
         sharedPreferences = context.getSharedPreferences("sharedPrefs", MODE_PRIVATE);
-        boolean darkModeOn = sharedPreferences.getBoolean("darkModeOn", false);
+        boolean darkModeOn = sharedPreferences.getBoolean("darkModeOn", true);
 
         mFireBaseAuth = FirebaseAuth.getInstance();
         mFireBaseFireStore = FirebaseFirestore.getInstance();
         if (mFireBaseAuth.getCurrentUser() != null) {
             mCurrentUserId = mFireBaseAuth.getCurrentUser().getUid();
-            FirebaseUser firebaseUser = mFireBaseAuth.getCurrentUser();
+            firebaseUser = mFireBaseAuth.getCurrentUser();
             mCurrentUserEmail = firebaseUser.getEmail();
         }
 
@@ -190,6 +201,30 @@ public class ProfileFragment extends Fragment {
             }
         });
 
+        ImageView imageViewUpdateDetails = view.findViewById(R.id.image_view_update_details);
+        textViewUpdateDetails = view.findViewById(R.id.text_view_update_details);
+
+        String emailAddressSubString = mCurrentUserEmail.substring(0, 5);
+        if (emailAddressSubString.equals("guest")) {
+
+            imageViewUpdateDetails.setVisibility(View.VISIBLE);
+            textViewUpdateDetails.setVisibility(View.VISIBLE);
+        }
+
+        imageViewUpdateDetails.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                reauthenticateUser();
+            }
+        });
+
+        textViewUpdateDetails.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                reauthenticateUser();
+            }
+        });
+
         window = getActivity().getWindow();
 
         toolbar = getActivity().findViewById(R.id.toolbar);
@@ -264,6 +299,7 @@ public class ProfileFragment extends Fragment {
         textViewDarkMode.setTextColor(ContextCompat.getColor(context, R.color.SecondaryDark));
         textViewSearchHistory.setTextColor(ContextCompat.getColor(context, R.color.SecondaryDark));
         textViewLogout.setTextColor(ContextCompat.getColor(context, R.color.SecondaryDark));
+        textViewUpdateDetails.setTextColor(ContextCompat.getColor(context, R.color.SecondaryDark));
         imageViewCameraIcon.setImageResource(R.drawable.camera_icon);
         ImageViewCompat.setImageTintList(clearSearchHistory, ContextCompat.getColorStateList(context, R.color.PrimaryDark));
     }
@@ -295,6 +331,7 @@ public class ProfileFragment extends Fragment {
         textViewDarkMode.setTextColor(ContextCompat.getColor(context, R.color.PrimaryLight));
         textViewSearchHistory.setTextColor(ContextCompat.getColor(context, R.color.PrimaryLight));
         textViewLogout.setTextColor(ContextCompat.getColor(context, R.color.PrimaryLight));
+        textViewUpdateDetails.setTextColor(ContextCompat.getColor(context, R.color.PrimaryLight));
         imageViewCameraIcon.setImageResource(R.drawable.camera_icon_dark);
         ImageViewCompat.setImageTintList(clearSearchHistory, ContextCompat.getColorStateList(context, R.color.PrimaryLight));
     }
@@ -326,7 +363,7 @@ public class ProfileFragment extends Fragment {
         GlistDatabase glistDatabase = GlistDatabase.getInstance(context);
         glistDatabase.clearAllTables();
 
-        Intent i = new Intent(context, RegisterActivity.class);
+        Intent i = new Intent(context, SignInActivity.class);
         i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(i);
         getActivity().finish();
@@ -422,5 +459,40 @@ public class ProfileFragment extends Fragment {
         } else {
             super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         }
+    }
+
+    private void reauthenticateUser() {
+
+        String guestPassword = md5(mCurrentUserEmail);
+
+        AuthCredential credential = EmailAuthProvider
+                .getCredential(mCurrentUserEmail, guestPassword);
+
+        firebaseUser.reauthenticate(credential)
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+
+                        Intent i = new Intent(context, UpdateUserDetailsActivity.class);
+                        i.putExtra("guestEmail", mCurrentUserEmail);
+                        startActivity(i);
+                        getActivity().overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
+                    }
+                });
+    }
+
+    public static String md5(String s) {
+        MessageDigest digest;
+        try {
+            digest = MessageDigest.getInstance("MD5");
+            digest.update(s.getBytes(Charset.forName("US-ASCII")), 0, s.length());
+            byte[] magnitude = digest.digest();
+            BigInteger bi = new BigInteger(1, magnitude);
+            String hash = String.format("%0" + (magnitude.length << 1) + "x", bi);
+            return hash;
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
+        return "";
     }
 }

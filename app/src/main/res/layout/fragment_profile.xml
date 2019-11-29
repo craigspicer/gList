@@ -74,7 +74,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:layout_marginEnd="16dp"
-                android:text="Dark Mode"
+                android:text="Dark mode"
                 android:textColor="@color/SecondaryDark"
                 app:layout_constraintBottom_toBottomOf="@+id/image_view_dark_mode_icon"
                 app:layout_constraintEnd_toStartOf="@+id/switch_dark_mode"
@@ -106,12 +106,38 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:layout_marginEnd="16dp"
-                android:text="Clear Search History"
+                android:text="Clear search history"
                 android:textColor="@color/SecondaryDark"
                 app:layout_constraintBottom_toBottomOf="@+id/image_view_search_history_icon"
                 app:layout_constraintEnd_toStartOf="@+id/image_view_bin_icon"
                 app:layout_constraintStart_toEndOf="@+id/image_view_search_history_icon"
                 app:layout_constraintTop_toTopOf="@+id/image_view_search_history_icon" />
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/image_view_update_details"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:layout_marginTop="10dp"
+                android:src="@drawable/emails_icon"
+                android:visibility="gone"
+                app:layout_constraintEnd_toEndOf="@+id/image_view_search_history_icon"
+                app:layout_constraintStart_toStartOf="@+id/image_view_search_history_icon"
+                app:layout_constraintTop_toBottomOf="@+id/image_view_logout" />
+
+            <TextView
+                android:id="@+id/text_view_update_details"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="3dp"
+                android:layout_marginEnd="16dp"
+                android:text="Change email address and password"
+                android:textColor="@color/SecondaryDark"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="@+id/image_view_update_details"
+                app:layout_constraintEnd_toStartOf="@+id/image_view_bin_icon"
+                app:layout_constraintStart_toEndOf="@+id/image_view_logout"
+                app:layout_constraintTop_toTopOf="@+id/image_view_update_details" />
 
             <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/image_view_logout"
@@ -129,7 +155,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:layout_marginEnd="16dp"
-                android:text="Sign Out"
+                android:text="Sign in with a different account"
                 android:textColor="@color/SecondaryDark"
                 app:layout_constraintBottom_toBottomOf="@+id/image_view_logout"
                 app:layout_constraintEnd_toStartOf="@+id/image_view_bin_icon"

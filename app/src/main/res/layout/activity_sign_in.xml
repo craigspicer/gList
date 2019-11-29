@@ -4,8 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/container"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".RegisterActivity">
+    android:layout_height="match_parent">
 
     <ScrollView
         android:id="@+id/scrollView"
@@ -99,29 +98,6 @@
                 app:layout_constraintTop_toBottomOf="@+id/edit_text_password" />
 
             <TextView
-                android:id="@+id/text_view_go_to_register"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="24dp"
-                android:text="Need an account?"
-                android:textColor="@color/PrimaryDark"
-                app:layout_constraintEnd_toStartOf="@+id/text_view_go_to_forgot_password"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/button_sign_in" />
-
-            <TextView
-                android:id="@+id/text_view_go_to_register_2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Sign up"
-                android:textColor="@color/Accent"
-                android:textStyle="bold"
-                app:layout_constraintEnd_toEndOf="@+id/text_view_go_to_register"
-                app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toStartOf="@+id/text_view_go_to_register"
-                app:layout_constraintTop_toBottomOf="@+id/text_view_go_to_register" />
-
-            <TextView
                 android:id="@+id/text_view_go_to_forgot_password"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -129,7 +105,8 @@
                 android:text="Forgot password?"
                 android:textColor="@color/PrimaryDark"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/text_view_go_to_register"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/button_sign_in" />
 
             <TextView
@@ -143,16 +120,6 @@
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toStartOf="@+id/text_view_go_to_forgot_password"
                 app:layout_constraintTop_toBottomOf="@+id/text_view_go_to_forgot_password" />
-
-            <TextView
-                android:id="@+id/dummy"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="24dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/text_view_go_to_register_2" />
 
             <ImageView
                 android:id="@+id/image_view_dark_mode"

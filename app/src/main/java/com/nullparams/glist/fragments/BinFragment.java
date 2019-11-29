@@ -80,7 +80,7 @@ public class BinFragment extends Fragment {
         layout = view.findViewById(R.id.container);
 
         sharedPreferences = context.getSharedPreferences("sharedPrefs", MODE_PRIVATE);
-        boolean darkModeOn = sharedPreferences.getBoolean("darkModeOn", false);
+        boolean darkModeOn = sharedPreferences.getBoolean("darkModeOn", true);
         if (darkModeOn) {
             darkMode();
         } else {

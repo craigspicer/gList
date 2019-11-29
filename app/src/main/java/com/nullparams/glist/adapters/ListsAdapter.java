@@ -62,7 +62,7 @@ public class ListsAdapter extends FirestoreRecyclerAdapter<List, ListsAdapter.Li
 
     public ListsAdapter(@NonNull FirestoreRecyclerOptions<List> options, SharedPreferences sharedPreferences, Context context, String callingFragment, Activity activity) {
         super(options);
-        darkModeOn = sharedPreferences.getBoolean("darkModeOn", false);
+        darkModeOn = sharedPreferences.getBoolean("darkModeOn", true);
         mContext = context;
         mCallingFragment = callingFragment;
         mActivity = activity;

@@ -175,7 +175,7 @@ public class MainActivity extends AppCompatActivity {
         bottomNav.setOnNavigationItemSelectedListener(navListener);
         bottomNav.setLabelVisibilityMode(LabelVisibilityMode.LABEL_VISIBILITY_SELECTED);
 
-        boolean darkModeOn = sharedPreferences.getBoolean("darkModeOn", false);
+        boolean darkModeOn = sharedPreferences.getBoolean("darkModeOn", true);
         if (darkModeOn) {
             darkMode();
         } else {

@@ -44,7 +44,7 @@ public class ItemAdapter extends FirestoreRecyclerAdapter<Item, ItemAdapter.Item
     public ItemAdapter(@NonNull FirestoreRecyclerOptions<Item> options, SharedPreferences sharedPreferences, Context context, String callingFragment, String uniqueId) {
         super(options);
 
-        darkModeOn = sharedPreferences.getBoolean("darkModeOn", false);
+        darkModeOn = sharedPreferences.getBoolean("darkModeOn", true);
         mContext = context;
         mCallingFragment = callingFragment;
         mUniqueId = uniqueId;

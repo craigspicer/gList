@@ -37,7 +37,6 @@ public class SignInActivity extends AppCompatActivity {
     private View container;
     private ImageView imageViewDarkMode;
     private ImageView imageViewLightMode;
-    private TextView textViewRegister;
     private TextView textViewForgotPassword;
     private SharedPreferences sharedPreferences;
     private FirebaseAuth mFireBaseAuth;
@@ -62,22 +61,6 @@ public class SignInActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 userLogin();
-            }
-        });
-
-        textViewRegister = findViewById(R.id.text_view_go_to_register);
-        textViewRegister.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onBackPressed();
-            }
-        });
-
-        TextView textViewRegister2 = findViewById(R.id.text_view_go_to_register_2);
-        textViewRegister2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onBackPressed();
             }
         });
 
@@ -107,7 +90,7 @@ public class SignInActivity extends AppCompatActivity {
         window = this.getWindow();
         container = findViewById(R.id.container2);
 
-        boolean darkModeOn = sharedPreferences.getBoolean("darkModeOn", false);
+        boolean darkModeOn = sharedPreferences.getBoolean("darkModeOn", true);
         if (darkModeOn) {
             darkMode();
         } else {
@@ -163,7 +146,6 @@ public class SignInActivity extends AppCompatActivity {
         editTextPassword.setTextColor(ContextCompat.getColor(context, R.color.PrimaryDark));
         editTextPassword.setHintTextColor(ContextCompat.getColor(context, R.color.PrimaryDark));
 
-        textViewRegister.setTextColor(ContextCompat.getColor(context, R.color.PrimaryDark));
         textViewForgotPassword.setTextColor(ContextCompat.getColor(context, R.color.PrimaryDark));
     }
 
@@ -185,7 +167,6 @@ public class SignInActivity extends AppCompatActivity {
         editTextPassword.setTextColor(ContextCompat.getColor(context, R.color.PrimaryLight));
         editTextPassword.setHintTextColor(ContextCompat.getColor(context, R.color.PrimaryLight));
 
-        textViewRegister.setTextColor(ContextCompat.getColor(context, R.color.PrimaryLight));
         textViewForgotPassword.setTextColor(ContextCompat.getColor(context, R.color.PrimaryLight));
     }
 
@@ -223,16 +204,6 @@ public class SignInActivity extends AppCompatActivity {
                         mProgressDialog.dismiss();
                     }
                 });
-    }
-
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        Intent i = new Intent(context, RegisterActivity.class);
-        i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        startActivity(i);
-        finish();
-        overridePendingTransition(R.anim.push_right_in, R.anim.push_right_out);
     }
 
     public static void hideKeyboard(Activity activity) {

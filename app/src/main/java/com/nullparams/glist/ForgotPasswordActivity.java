@@ -71,7 +71,7 @@ public class ForgotPasswordActivity extends AppCompatActivity {
         window = this.getWindow();
         container = findViewById(R.id.container2);
 
-        boolean darkModeOn = sharedPreferences.getBoolean("darkModeOn", false);
+        boolean darkModeOn = sharedPreferences.getBoolean("darkModeOn", true);
         if (darkModeOn) {
             darkMode();
         } else {

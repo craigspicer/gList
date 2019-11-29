@@ -142,7 +142,7 @@ public class ItemActivity extends AppCompatActivity {
             }
         });
 
-        boolean darkModeOn = sharedPreferences.getBoolean("darkModeOn", false);
+        boolean darkModeOn = sharedPreferences.getBoolean("darkModeOn", true);
         if (darkModeOn) {
             darkMode();
         } else {
