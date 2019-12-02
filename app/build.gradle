@@ -9,8 +9,8 @@ android {
         applicationId "com.nullparams.glist"
         minSdkVersion 23
         targetSdkVersion 29
-        versionCode 10006
-        versionName "1.0.6"
+        versionCode 10007
+        versionName "1.0.7"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
         multiDexEnabled true

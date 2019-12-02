@@ -120,7 +120,7 @@ public class BinFragment extends Fragment {
                 .setQuery(query, List.class)
                 .build();
 
-        adapter = new ListsAdapter(options, sharedPreferences, context, "Bin", getActivity());
+        adapter = new ListsAdapter(options, sharedPreferences, context, "Bin");
 
         recyclerView.setAdapter(adapter);
 
@@ -227,7 +227,6 @@ public class BinFragment extends Fragment {
                 i.putExtra("callingFragment", "BinFragment");
                 i.putExtra("fromNotification", false);
                 startActivity(i);
-                getActivity().overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
             }
         });
     }

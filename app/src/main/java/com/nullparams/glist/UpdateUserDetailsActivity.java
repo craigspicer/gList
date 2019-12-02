@@ -72,17 +72,13 @@ public class UpdateUserDetailsActivity extends AppCompatActivity {
 
         SharedPreferences sharedPreferences = getSharedPreferences("sharedPrefs", MODE_PRIVATE);
 
-        Bundle bundle = getIntent().getExtras();
-        if (bundle != null) {
-            guestEmail = bundle.getString("guestEmail");
-        }
-
         FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
         firebaseUser = firebaseAuth.getCurrentUser();
         mFireBaseFireStore = FirebaseFirestore.getInstance();
 
         if (firebaseAuth.getCurrentUser() != null) {
             mCurrentUserId = firebaseUser.getUid();
+            guestEmail = firebaseUser.getEmail();
         }
 
         mProgressDialog = new ProgressDialog(context);
@@ -108,6 +104,8 @@ public class UpdateUserDetailsActivity extends AppCompatActivity {
         } else {
             lightMode();
         }
+
+        reAuthenticateUser();
     }
 
     private void lightMode() {
@@ -288,5 +286,15 @@ public class UpdateUserDetailsActivity extends AppCompatActivity {
             e.printStackTrace();
         }
         return "";
+    }
+
+    private void reAuthenticateUser() {
+
+        String guestPassword = md5(guestEmail);
+
+        AuthCredential credential = EmailAuthProvider
+                .getCredential(guestEmail, guestPassword);
+
+        firebaseUser.reauthenticate(credential);
     }
 }

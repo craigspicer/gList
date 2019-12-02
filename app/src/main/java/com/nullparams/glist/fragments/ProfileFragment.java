@@ -33,11 +33,7 @@ import android.widget.Toast;
 
 import com.daimajia.androidanimations.library.Techniques;
 import com.daimajia.androidanimations.library.YoYo;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.firebase.auth.AuthCredential;
-import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
@@ -52,10 +48,6 @@ import com.squareup.picasso.Picasso;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.math.BigInteger;
-import java.nio.charset.Charset;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 
 import es.dmoral.toasty.Toasty;
 
@@ -85,7 +77,6 @@ public class ProfileFragment extends Fragment {
     private ImageView imageViewToolbarAdd;
     private ImageView clearSearchHistory;
     private String mCurrentUserEmail;
-    private FirebaseUser firebaseUser;
     private TextView textViewUpdateDetails;
 
     @Override
@@ -105,9 +96,10 @@ public class ProfileFragment extends Fragment {
 
         mFireBaseAuth = FirebaseAuth.getInstance();
         mFireBaseFireStore = FirebaseFirestore.getInstance();
+
         if (mFireBaseAuth.getCurrentUser() != null) {
             mCurrentUserId = mFireBaseAuth.getCurrentUser().getUid();
-            firebaseUser = mFireBaseAuth.getCurrentUser();
+            FirebaseUser firebaseUser = mFireBaseAuth.getCurrentUser();
             mCurrentUserEmail = firebaseUser.getEmail();
         }
 
@@ -214,14 +206,16 @@ public class ProfileFragment extends Fragment {
         imageViewUpdateDetails.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                reauthenticateUser();
+                Intent i = new Intent(context, UpdateUserDetailsActivity.class);
+                startActivity(i);
             }
         });
 
         textViewUpdateDetails.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                reauthenticateUser();
+                Intent i = new Intent(context, UpdateUserDetailsActivity.class);
+                startActivity(i);
             }
         });
 
@@ -366,7 +360,6 @@ public class ProfileFragment extends Fragment {
         Intent i = new Intent(context, SignInActivity.class);
         i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(i);
-        getActivity().finish();
     }
 
     private void openFileChooser() {
@@ -459,40 +452,5 @@ public class ProfileFragment extends Fragment {
         } else {
             super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         }
-    }
-
-    private void reauthenticateUser() {
-
-        String guestPassword = md5(mCurrentUserEmail);
-
-        AuthCredential credential = EmailAuthProvider
-                .getCredential(mCurrentUserEmail, guestPassword);
-
-        firebaseUser.reauthenticate(credential)
-                .addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-
-                        Intent i = new Intent(context, UpdateUserDetailsActivity.class);
-                        i.putExtra("guestEmail", mCurrentUserEmail);
-                        startActivity(i);
-                        getActivity().overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
-                    }
-                });
-    }
-
-    public static String md5(String s) {
-        MessageDigest digest;
-        try {
-            digest = MessageDigest.getInstance("MD5");
-            digest.update(s.getBytes(Charset.forName("US-ASCII")), 0, s.length());
-            byte[] magnitude = digest.digest();
-            BigInteger bi = new BigInteger(1, magnitude);
-            String hash = String.format("%0" + (magnitude.length << 1) + "x", bi);
-            return hash;
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-        }
-        return "";
     }
 }

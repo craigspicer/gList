@@ -118,7 +118,7 @@ public class ListsFragment extends Fragment {
                 .setQuery(query, List.class)
                 .build();
 
-        adapter = new ListsAdapter(options, sharedPreferences, context, "My_lists", getActivity());
+        adapter = new ListsAdapter(options, sharedPreferences, context, "My_lists");
 
         recyclerView.setAdapter(adapter);
 
@@ -188,7 +188,6 @@ public class ListsFragment extends Fragment {
                 i.putExtra("callingFragment", "ListsFragment");
                 i.putExtra("fromNotification", false);
                 startActivity(i);
-                getActivity().overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
             }
         });
     }

@@ -26,7 +26,6 @@ import android.widget.Toast;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
@@ -46,7 +45,7 @@ public class ItemActivity extends AppCompatActivity {
     private View container;
     private ImageView toolbarCheck;
     private TextView textViewActivityTitle;
-    private String mCurrentUserId, currentUserEmail;
+    private String mCurrentUserId;
     private FirebaseFirestore mFireBaseFireStore;
     private String uniqueId;
     private String collectionId;
@@ -87,8 +86,6 @@ public class ItemActivity extends AppCompatActivity {
 
         if (mFireBaseAuth.getCurrentUser() != null) {
             mCurrentUserId = mFireBaseAuth.getCurrentUser().getUid();
-            FirebaseUser mUser = mFireBaseAuth.getCurrentUser();
-            currentUserEmail = mUser.getEmail();
         }
 
         toolbar = findViewById(R.id.toolbar);

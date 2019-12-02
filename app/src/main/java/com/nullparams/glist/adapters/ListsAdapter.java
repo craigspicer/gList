@@ -57,15 +57,13 @@ public class ListsAdapter extends FirestoreRecyclerAdapter<List, ListsAdapter.Li
     private FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
     private String currentUserEmail = firebaseUser.getEmail();
     private String mCallingFragment;
-    private Activity mActivity;
     private String mCreatingFragment;
 
-    public ListsAdapter(@NonNull FirestoreRecyclerOptions<List> options, SharedPreferences sharedPreferences, Context context, String callingFragment, Activity activity) {
+    public ListsAdapter(@NonNull FirestoreRecyclerOptions<List> options, SharedPreferences sharedPreferences, Context context, String callingFragment) {
         super(options);
         darkModeOn = sharedPreferences.getBoolean("darkModeOn", true);
         mContext = context;
         mCallingFragment = callingFragment;
-        mActivity = activity;
     }
 
     @Override
@@ -154,7 +152,6 @@ public class ListsAdapter extends FirestoreRecyclerAdapter<List, ListsAdapter.Li
                                         i.putExtra("itemArrayList", itemArrayList);
                                         i.putExtra("newUniqueId", newUniqueId);
                                         mContext.startActivity(i);
-                                        mActivity.overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
                                     }
                                 }
                             }
