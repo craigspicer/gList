@@ -38,6 +38,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
@@ -84,6 +85,7 @@ public class ListActivity extends AppCompatActivity {
     private String listName;
     private boolean fromNotification;
     private EditText editTextCost;
+    private FirebaseAnalytics mFireBaseAnalytics;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -114,6 +116,7 @@ public class ListActivity extends AppCompatActivity {
 
         FirebaseAuth mFireBaseAuth = FirebaseAuth.getInstance();
         mFireBaseFireStore = FirebaseFirestore.getInstance();
+        mFireBaseAnalytics = FirebaseAnalytics.getInstance(this);
 
         if (mFireBaseAuth.getCurrentUser() != null) {
             mCurrentUserId = mFireBaseAuth.getCurrentUser().getUid();
@@ -287,6 +290,10 @@ public class ListActivity extends AppCompatActivity {
             Toasty.info(context, "Please enter an item name", Toast.LENGTH_LONG, true).show();
             return;
         }
+
+        Bundle bundle = new Bundle();
+        bundle.putString("item_name", name);
+        mFireBaseAnalytics.logEvent("item_add", bundle);
 
         String amount = mTextViewAmount.getText().toString();
         String cost = editTextCost.getText().toString();
