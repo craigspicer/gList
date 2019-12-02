@@ -440,12 +440,11 @@ public class ShareActivity extends AppCompatActivity {
         String modItemString = itemString.replaceAll(",", "\n");
         String modItemString2 = modItemString.replace("[", "");
         String modItemString3 = modItemString2.replace("]", "");
-        String modItemString4 = modItemString3.replace(" ", "");
 
         Intent whatsAppIntent = new Intent(Intent.ACTION_SEND);
         whatsAppIntent.setType("text/plain"); //html
         whatsAppIntent.setPackage("com.whatsapp");
-        whatsAppIntent.putExtra(Intent.EXTRA_TEXT, "https://play.google.com/store/apps/details?id=com.nullparams.glist\n\n" + modItemString4);
+        whatsAppIntent.putExtra(Intent.EXTRA_TEXT, "https://play.google.com/store/apps/details?id=com.nullparams.glist\n\n" + modItemString3);
 
         try {
             startActivity(whatsAppIntent);
