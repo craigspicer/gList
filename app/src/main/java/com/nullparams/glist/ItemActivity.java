@@ -213,7 +213,6 @@ public class ItemActivity extends AppCompatActivity {
         super.onBackPressed();
         finish();
         hideKeyboard(this);
-        overridePendingTransition(R.anim.push_right_in, R.anim.push_right_out);
     }
 
     private void updateItem() {
@@ -282,6 +281,5 @@ public class ItemActivity extends AppCompatActivity {
 
         Toasty.info(context, "Item updated", Toast.LENGTH_LONG, true).show();
         finish();
-        overridePendingTransition(R.anim.push_right_in, R.anim.push_right_out);
     }
 }

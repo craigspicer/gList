@@ -151,7 +151,6 @@ public class MainActivity extends AppCompatActivity {
                 i.putExtra("callingFragment", "ListsFragment");
                 i.putExtra("fromNotification", false);
                 startActivity(i);
-                overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
             }
         });
 
@@ -384,7 +383,6 @@ public class MainActivity extends AppCompatActivity {
                             i.putExtra("searchTerm", searchTerm);
                             i.putExtra("searchSuggestions", searchSuggestions);
                             startActivity(i);
-                            overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
                         }
                     }
                 });

@@ -155,7 +155,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:layout_marginEnd="16dp"
-                android:text="Sign in with a different account"
+                android:text="Sign out"
                 android:textColor="@color/SecondaryDark"
                 app:layout_constraintBottom_toBottomOf="@+id/image_view_logout"
                 app:layout_constraintEnd_toStartOf="@+id/image_view_bin_icon"

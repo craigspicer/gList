@@ -188,7 +188,7 @@ public class SearchActivity extends AppCompatActivity {
             mLists.add(listEntityItem);
         }
 
-        SearchAdapter searchAdapter = new SearchAdapter(context, mLists, sharedPreferences, this);
+        SearchAdapter searchAdapter = new SearchAdapter(context, mLists, sharedPreferences);
         recyclerView.setAdapter(searchAdapter);
 
         recentSearchesList = repository.getRecentSearches();
@@ -211,7 +211,6 @@ public class SearchActivity extends AppCompatActivity {
     public void onBackPressed() {
         super.onBackPressed();
         finish();
-        overridePendingTransition(R.anim.push_right_in, R.anim.push_right_out);
         hideKeyboard(this);
     }
 

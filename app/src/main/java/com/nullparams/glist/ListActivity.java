@@ -249,13 +249,11 @@ public class ListActivity extends AppCompatActivity {
             startActivity(i);
             finish();
             hideKeyboard(this);
-            overridePendingTransition(R.anim.push_right_in, R.anim.push_right_out);
 
         } else {
 
             finish();
             hideKeyboard(this);
-            overridePendingTransition(R.anim.push_right_in, R.anim.push_right_out);
         }
     }
 
@@ -416,7 +414,6 @@ public class ListActivity extends AppCompatActivity {
                 i.putExtra("itemCost", item.getCost());
                 i.putExtra("strike", item.getStrike());
                 startActivity(i);
-                overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
             }
         });
     }
@@ -443,7 +440,9 @@ public class ListActivity extends AppCompatActivity {
                 if (!outRect.contains((int) event.getRawX(), (int) event.getRawY())) {
                     v.clearFocus();
                     InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                    imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+                    if (imm != null) {
+                        imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+                    }
                 }
             }
         }
@@ -492,7 +491,6 @@ public class ListActivity extends AppCompatActivity {
                                 i.putExtra("listName", listName);
                                 i.putExtra("itemArrayList", itemArrayList);
                                 startActivity(i);
-                                overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
                             }
                         }
                     }

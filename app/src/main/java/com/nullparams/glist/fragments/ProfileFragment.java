@@ -39,7 +39,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.nullparams.glist.R;
-import com.nullparams.glist.SignInActivity;
+import com.nullparams.glist.RegisterActivity;
 import com.nullparams.glist.UpdateUserDetailsActivity;
 import com.nullparams.glist.database.GlistDatabase;
 import com.nullparams.glist.repository.Repository;
@@ -357,7 +357,7 @@ public class ProfileFragment extends Fragment {
         GlistDatabase glistDatabase = GlistDatabase.getInstance(context);
         glistDatabase.clearAllTables();
 
-        Intent i = new Intent(context, SignInActivity.class);
+        Intent i = new Intent(context, RegisterActivity.class);
         i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(i);
     }

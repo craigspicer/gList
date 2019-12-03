@@ -1,6 +1,5 @@
 package com.nullparams.glist.adapters;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -46,7 +45,6 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.SearchView
     private FirebaseAuth firebaseAuth = com.google.firebase.auth.FirebaseAuth.getInstance();
     private String current_user_id = firebaseAuth.getCurrentUser().getUid();
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
-    private Activity mActivity;
 
     class SearchViewHolder extends RecyclerView.ViewHolder {
 
@@ -73,12 +71,11 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.SearchView
         }
     }
 
-    public SearchAdapter(Context context, List<ListEntity> list, SharedPreferences sharedPreferences, Activity activity) {
+    public SearchAdapter(Context context, List<ListEntity> list, SharedPreferences sharedPreferences) {
 
         darkModeOn = sharedPreferences.getBoolean("darkModeOn", true);
         mList = list;
         mContext = context;
-        mActivity = activity;
     }
 
     @NonNull
@@ -116,7 +113,7 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.SearchView
                 i.putExtra("uniqueId", currentItem.getId());
                 i.putExtra("listName", currentItem.getTitle());
 
-                if(currentItem.getCallingFragment().equals("My_lists")) {
+                if (currentItem.getCallingFragment().equals("My_lists")) {
                     i.putExtra("callingFragment", "ListsFragment");
                 } else if (currentItem.getCallingFragment().equals("Shared_lists")) {
                     i.putExtra("callingFragment", "SharedFragment");
@@ -125,7 +122,6 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.SearchView
                 }
 
                 mContext.startActivity(i);
-                mActivity.overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
             }
         });
 
@@ -192,7 +188,6 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.SearchView
                                         i.putExtra("itemArrayList", itemArrayList);
                                         i.putExtra("newUniqueId", newUniqueId);
                                         mContext.startActivity(i);
-                                        mActivity.overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
                                     }
                                 }
                             }

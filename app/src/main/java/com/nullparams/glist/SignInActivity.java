@@ -21,9 +21,17 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.iid.InstanceIdResult;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import es.dmoral.toasty.Toasty;
 
@@ -37,10 +45,13 @@ public class SignInActivity extends AppCompatActivity {
     private View container;
     private ImageView imageViewDarkMode;
     private ImageView imageViewLightMode;
+    private TextView textViewRegister;
     private TextView textViewForgotPassword;
     private SharedPreferences sharedPreferences;
     private FirebaseAuth mFireBaseAuth;
     private ProgressDialog mProgressDialog;
+    private String mCurrentUserId;
+    private FirebaseFirestore mFireBaseFireStore;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,6 +61,7 @@ public class SignInActivity extends AppCompatActivity {
         sharedPreferences = getSharedPreferences("sharedPrefs", MODE_PRIVATE);
 
         mFireBaseAuth = FirebaseAuth.getInstance();
+        mFireBaseFireStore = FirebaseFirestore.getInstance();
 
         mProgressDialog = new ProgressDialog(context);
         imageViewHiveLogo = findViewById(R.id.image_view_hive_logo);
@@ -61,6 +73,22 @@ public class SignInActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 userLogin();
+            }
+        });
+
+        textViewRegister = findViewById(R.id.text_view_go_to_register);
+        textViewRegister.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBackPressed();
+            }
+        });
+
+        TextView textViewRegister2 = findViewById(R.id.text_view_go_to_register_2);
+        textViewRegister2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBackPressed();
             }
         });
 
@@ -146,6 +174,7 @@ public class SignInActivity extends AppCompatActivity {
         editTextPassword.setTextColor(ContextCompat.getColor(context, R.color.PrimaryDark));
         editTextPassword.setHintTextColor(ContextCompat.getColor(context, R.color.PrimaryDark));
 
+        textViewRegister.setTextColor(ContextCompat.getColor(context, R.color.PrimaryDark));
         textViewForgotPassword.setTextColor(ContextCompat.getColor(context, R.color.PrimaryDark));
     }
 
@@ -167,6 +196,7 @@ public class SignInActivity extends AppCompatActivity {
         editTextPassword.setTextColor(ContextCompat.getColor(context, R.color.PrimaryLight));
         editTextPassword.setHintTextColor(ContextCompat.getColor(context, R.color.PrimaryLight));
 
+        textViewRegister.setTextColor(ContextCompat.getColor(context, R.color.PrimaryLight));
         textViewForgotPassword.setTextColor(ContextCompat.getColor(context, R.color.PrimaryLight));
     }
 
@@ -192,6 +222,12 @@ public class SignInActivity extends AppCompatActivity {
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
 
+                            if (mFireBaseAuth.getCurrentUser() != null) {
+                                mCurrentUserId = mFireBaseAuth.getCurrentUser().getUid();
+                            }
+
+                            registerToken();
+
                             Intent i = new Intent(context, MainActivity.class);
                             i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                             startActivity(i);
@@ -206,6 +242,16 @@ public class SignInActivity extends AppCompatActivity {
                 });
     }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Intent i = new Intent(context, RegisterActivity.class);
+        i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(i);
+        finish();
+        overridePendingTransition(R.anim.push_right_in, R.anim.push_right_out);
+    }
+
     public static void hideKeyboard(Activity activity) {
         InputMethodManager imm = (InputMethodManager) activity.getSystemService(Activity.INPUT_METHOD_SERVICE);
         View view = activity.getCurrentFocus();
@@ -215,5 +261,21 @@ public class SignInActivity extends AppCompatActivity {
         if (imm != null) {
             imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
         }
+    }
+
+    private void registerToken() {
+
+        FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(new OnSuccessListener<InstanceIdResult>() {
+            @Override
+            public void onSuccess(InstanceIdResult instanceIdResult) {
+                String deviceToken = instanceIdResult.getToken();
+
+                Map<String, Object> userToken = new HashMap<>();
+                userToken.put("User_Token_ID", deviceToken);
+
+                DocumentReference userTokenPath = mFireBaseFireStore.collection("Users").document(mCurrentUserId).collection("Tokens").document("User_Token");
+                userTokenPath.set(userToken);
+            }
+        });
     }
 }

@@ -148,7 +148,6 @@ public class UpdateUserDetailsActivity extends AppCompatActivity {
     public void onBackPressed() {
         super.onBackPressed();
         finish();
-        overridePendingTransition(R.anim.push_right_in, R.anim.push_right_out);
     }
 
     private void updateDetails() {
@@ -252,7 +251,6 @@ public class UpdateUserDetailsActivity extends AppCompatActivity {
                                                                                 i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                                                                                 startActivity(i);
                                                                                 finish();
-                                                                                overridePendingTransition(R.anim.push_right_in, R.anim.push_right_out);
                                                                                 Toasty.success(context, "Details updated", Toast.LENGTH_LONG, true).show();
                                                                             }
                                                                         });

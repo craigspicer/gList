@@ -293,7 +293,6 @@ public class ShareActivity extends AppCompatActivity {
 
             Toasty.success(context, "List emailed to " + sharedUserEmail, Toast.LENGTH_LONG, true).show();
             finish();
-            overridePendingTransition(R.anim.push_right_in, R.anim.push_right_out);
 
         } else {
 
@@ -415,7 +414,6 @@ public class ShareActivity extends AppCompatActivity {
 
                             Toasty.success(context, "List shared with and emailed to " + sharedUserEmail, Toast.LENGTH_LONG, true).show();
                             finish();
-                            overridePendingTransition(R.anim.push_right_in, R.anim.push_right_out);
 
                         } else {
 
@@ -423,7 +421,6 @@ public class ShareActivity extends AppCompatActivity {
 
                             Toasty.success(context, "List emailed to " + sharedUserEmail, Toast.LENGTH_LONG, true).show();
                             finish();
-                            overridePendingTransition(R.anim.push_right_in, R.anim.push_right_out);
                         }
 
                     } else {
@@ -489,6 +486,5 @@ public class ShareActivity extends AppCompatActivity {
         super.onBackPressed();
         finish();
         hideKeyboard(this);
-        overridePendingTransition(R.anim.push_right_in, R.anim.push_right_out);
     }
 }
