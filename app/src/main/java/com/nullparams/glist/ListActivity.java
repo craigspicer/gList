@@ -499,12 +499,35 @@ public class ListActivity extends AppCompatActivity {
 
     private void updateListName() {
 
-        String listName = editTextListName.getText().toString().trim();
+        listName = editTextListName.getText().toString().trim();
         if (listName.equals("")) {
             listName = "My List";
         }
 
-        DocumentReference listPath = mFireBaseFireStore.collection("Users").document(mCurrentUserId).collection(collectionId).document(uniqueId);
-        listPath.update("title", listName);
+        if (callingFragment.equals("SharedFragment")) {
+
+            mFireBaseFireStore.collection("Users").document(mCurrentUserId).collection("Shared_lists").document(uniqueId).collection("Participants")
+                    .get()
+                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                            if (task.isSuccessful()) {
+
+                                for (QueryDocumentSnapshot document : task.getResult()) {
+
+                                    User user = document.toObject(User.class);
+                                    String sharedUserId = user.getId();
+
+                                    DocumentReference listPath = mFireBaseFireStore.collection("Users").document(sharedUserId).collection("Shared_lists").document(uniqueId);
+                                    listPath.update("title", listName);
+                                }
+                            }
+                        }
+                    });
+        } else {
+
+            DocumentReference listPath = mFireBaseFireStore.collection("Users").document(mCurrentUserId).collection(collectionId).document(uniqueId);
+            listPath.update("title", listName);
+        }
     }
 }
