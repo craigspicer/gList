@@ -359,14 +359,8 @@ public class ShareActivity extends AppCompatActivity {
                             DocumentReference currentUserParticipantsPath = mFireBaseFireStore.collection("Users").document(mCurrentUserId).collection("Shared_lists").document(uniqueId).collection("Participants").document(currentUserEmail);
                             currentUserParticipantsPath.set(new User(mCurrentUserId, currentUserEmail));
 
-                            DocumentReference sharedUserParticipantsPath = mFireBaseFireStore.collection("Users").document(mSharedUserId).collection("Shared_lists").document(uniqueId).collection("Participants").document(currentUserEmail);
-                            sharedUserParticipantsPath.set(new User(mCurrentUserId, currentUserEmail));
-
                             DocumentReference currentUserParticipantsPath2 = mFireBaseFireStore.collection("Users").document(mCurrentUserId).collection("Shared_lists").document(uniqueId).collection("Participants").document(sharedUserEmail);
                             currentUserParticipantsPath2.set(new User(mSharedUserId, sharedUserEmail));
-
-                            DocumentReference sharedUserParticipantsPath2 = mFireBaseFireStore.collection("Users").document(mSharedUserId).collection("Shared_lists").document(uniqueId).collection("Participants").document(sharedUserEmail);
-                            sharedUserParticipantsPath2.set(new User(mSharedUserId, sharedUserEmail));
 
                             java.util.List<User> userList = new ArrayList<>();
 
@@ -380,33 +374,16 @@ public class ShareActivity extends AppCompatActivity {
                                                 for (QueryDocumentSnapshot document : task.getResult()) {
 
                                                     User user = document.toObject(User.class);
-                                                    String userId = user.getId();
+                                                    userList.add(user);
 
-                                                    mFireBaseFireStore.collection("Users").document(userId).collection("Shared_lists").document(uniqueId).collection("Participants")
-                                                            .get()
-                                                            .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                                                                @Override
-                                                                public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                                                    if (task.isSuccessful()) {
+                                                    for (User user1 : userList) {
 
-                                                                        for (QueryDocumentSnapshot document : task.getResult()) {
+                                                        for (User user2 : userList) {
 
-                                                                            User user = document.toObject(User.class);
-
-                                                                            userList.add(user);
-
-                                                                            for (User user1 : userList) {
-
-                                                                                for (User user2 : userList) {
-
-                                                                                    DocumentReference userParticipantsPath = mFireBaseFireStore.collection("Users").document(user1.getId()).collection("Shared_lists").document(uniqueId).collection("Participants").document(user2.getEmailAddress());
-                                                                                    userParticipantsPath.set(new User(user2.getId(), user2.getEmailAddress()));
-                                                                                }
-                                                                            }
-                                                                        }
-                                                                    }
-                                                                }
-                                                            });
+                                                            DocumentReference userParticipantsPath = mFireBaseFireStore.collection("Users").document(user1.getId()).collection("Shared_lists").document(uniqueId).collection("Participants").document(user2.getEmailAddress());
+                                                            userParticipantsPath.set(new User(user2.getId(), user2.getEmailAddress()));
+                                                        }
+                                                    }
                                                 }
                                             }
                                         }
