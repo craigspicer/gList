@@ -31,6 +31,7 @@ import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
@@ -69,6 +70,7 @@ public class ShareActivity extends AppCompatActivity {
     private TextView whatsAppText;
     private String listName;
     private TextView textViewActivityTitle;
+    private FirebaseAnalytics mFireBaseAnalytics;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,6 +90,7 @@ public class ShareActivity extends AppCompatActivity {
 
         SharedPreferences sharedPreferences = getSharedPreferences("sharedPrefs", MODE_PRIVATE);
 
+        mFireBaseAnalytics = FirebaseAnalytics.getInstance(this);
         FirebaseAuth mFireBaseAuth = FirebaseAuth.getInstance();
         mFireBaseFireStore = FirebaseFirestore.getInstance();
 
@@ -389,12 +392,20 @@ public class ShareActivity extends AppCompatActivity {
                                         }
                                     });
 
+                            Bundle bundle = new Bundle();
+                            bundle.putString("list_name", listName);
+                            mFireBaseAnalytics.logEvent("share_device", bundle);
+
                             Toasty.success(context, "List shared with and emailed to " + sharedUserEmail, Toast.LENGTH_LONG, true).show();
                             finish();
 
                         } else {
 
                             SendMailShare.sendMail(sharedUserEmail, currentUserEmail, itemArrayList, listName);
+
+                            Bundle bundle = new Bundle();
+                            bundle.putString("list_name", listName);
+                            mFireBaseAnalytics.logEvent("share_email", bundle);
 
                             Toasty.success(context, "List emailed to " + sharedUserEmail, Toast.LENGTH_LONG, true).show();
                             finish();
@@ -422,6 +433,11 @@ public class ShareActivity extends AppCompatActivity {
 
         try {
             startActivity(whatsAppIntent);
+
+            Bundle bundle = new Bundle();
+            bundle.putString("list_name", listName);
+            mFireBaseAnalytics.logEvent("share_whatsapp", bundle);
+
         } catch (android.content.ActivityNotFoundException e) {
             e.printStackTrace();
             Toasty.error(context, "WhatsApp is not installed", Toast.LENGTH_LONG, true).show();

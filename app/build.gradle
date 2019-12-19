@@ -9,8 +9,8 @@ android {
         applicationId "com.nullparams.glist"
         minSdkVersion 23
         targetSdkVersion 29
-        versionCode 10010
-        versionName "1.0.10"
+        versionCode 10011
+        versionName "1.0.11"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
         multiDexEnabled true
@@ -51,14 +51,14 @@ dependencies {
     implementation 'com.google.android.material:material:1.0.0'
     implementation 'com.google.firebase:firebase-core:17.2.1'
     implementation 'com.google.firebase:firebase-auth:19.2.0'
-    implementation 'com.google.firebase:firebase-firestore:21.3.0'
+    implementation 'com.google.firebase:firebase-firestore:21.3.1'
     implementation 'com.google.firebase:firebase-storage:19.1.0'
-    implementation 'com.google.firebase:firebase-messaging:20.0.1'
+    implementation 'com.google.firebase:firebase-messaging:20.1.0'
     implementation 'com.firebaseui:firebase-ui-firestore:4.2.1'
     implementation 'com.firebaseui:firebase-ui-auth:4.3.2'
     implementation 'com.firebaseui:firebase-ui-storage:4.2.1'
     implementation 'com.crashlytics.sdk.android:crashlytics:2.10.1'
-    implementation 'com.google.firebase:firebase-perf:19.0.2'
+    implementation 'com.google.firebase:firebase-perf:19.0.3'
 
     implementation 'com.squareup.picasso:picasso:2.71828'
     implementation 'de.hdodenhof:circleimageview:3.0.0'
@@ -77,6 +77,7 @@ dependencies {
     annotationProcessor 'androidx.room:room-compiler:2.2.2'
 
     testImplementation 'junit:junit:4.12'
+
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
 }
